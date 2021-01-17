@@ -1,6 +1,6 @@
 class Unit {
   String id;
-  double amount;
+  int amount;
   String symbol;
   String name;
 
@@ -12,10 +12,21 @@ class Unit {
   });
 
   String toTextWithSymbol() {
-    return '$amount $symbol';
+    return '$amount$symbol';
+  }
+
+  // TODO check for a better implementation later
+  String nameToText() {
+    String returnValue = name;
+
+    if (amount != 1) {
+      returnValue += 's';
+    }
+
+    return returnValue;
   }
 
   String toTextWithName() {
-    return '$amount $name';
+    return '$amount ${nameToText()}';
   }
 }
