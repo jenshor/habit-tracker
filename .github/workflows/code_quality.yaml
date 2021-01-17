@@ -1,0 +1,14 @@
+name:  Check code quality
+on:
+  pull_request:
+    branches: [ master, develop ]
+jobs:
+  code_quality:
+    name: Code quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+      - run: flutter analyze

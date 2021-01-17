@@ -1,8 +1,11 @@
-// This file is provided as a convenience for running integration tests via the
-// flutter drive command.
-//
-// flutter drive --driver integration_test/driver.dart --target integration_test/app_test.dart
+import 'package:flutter_driver/driver_extension.dart';
+import 'package:habit_tracker/main.dart' as app;
 
-import 'package:integration_test/integration_test_driver.dart';
+void main() {
+  // This line enables the extension.
+  enableFlutterDriverExtension();
 
-Future<void> main() => integrationDriver();
+  // Call the `main()` function of the app, or call `runApp` with
+  // any widget you are interested in testing.
+  app.main();
+}

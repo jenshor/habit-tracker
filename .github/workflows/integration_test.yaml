@@ -1,0 +1,149 @@
+name: Run integration tests
+on:
+  pull_request:
+    branches: [ master, develop ]
+jobs:
+  integration_test_ios:
+    name: Integration test on iOS
+    strategy:
+      matrix:
+        device:
+        - "iPhone 11 Pro Max"
+      fail-fast: false
+    runs-on: macOS-latest
+    steps:
+    - name: List all simulators
+      run: xcrun simctl list "devices" "${{ matrix.device }}"
+    - name: Start Simulator
+      run: |
+        UDID=$(
+          xcrun simctl list "devices" "${{ matrix.device }}" | grep "${{ matrix.device }} (" -m 1 | awk '{gsub(/\(/, "", $(NF-1)); gsub(/\)/, "", $(NF-1)); print $(NF-1)}'
+        )
+
+        xcrun simctl boot "${UDID:?No Simulator with this name found}"
+    - uses: actions/checkout@master
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: stable
+    - name: Run pub get
+      run: flutter pub get
+    - name: Pod setup
+      run: | 
+        cd ios
+        pod install
+    - name: Run test
+      run: flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+  integration_test_macos:
+    name: Integration test on MacOS
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '1.26.x'
+        # currently macos-desktop support is only available on the dev branch
+        # and not on stable branch
+        # change this to stable the moment desktop support becomes available on stable
+        channel: 'dev'
+    - name: Enable MacOS desktop support
+      run: flutter config --enable-macos-desktop
+    - name: Run test
+      run: flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart -d macos
+  # integration_test_linux:
+  #   name: Integration test on Ubuntu
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - uses: actions/setup-java@v1
+  #     with:
+  #       java-version: '12.x'
+  #   - uses: subosito/flutter-action@v1
+  #     with:
+  #       flutter-version: '1.26.x'
+  #       # currently linux-desktop support is only available on the dev branch
+  #       # and not on stable branch
+  #       # change this to stable the moment desktop support becomes available on stable
+  #       channel: 'dev'
+  #   - name: Install additional requirements
+  #     run: | 
+  #       sudo apt-get update -y
+  #       sudo apt-get install -y ninja-build libgtk-3-dev
+  #   - name: Enable Linux desktop support
+  #     run: flutter config --enable-linux-desktop
+  #   - name: Run test
+  #     run: |
+  #       flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+  integration_test_windows:
+    name: Integration test on Windows
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '1.25.x'
+        # currently windows-desktop support is only available on the dev branch
+        # and not on stable branch
+        # change this to stable the moment desktop support becomes available on stable
+        channel: 'dev'
+    - name: Enable Windows desktop support
+      run: flutter config --enable-windows-desktop
+    - name: Run test
+      run: flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+  # yaml obtained from https://medium.com/better-programming/test-flutter-apps-on-android-with-github-actions-abdba2137b4
+  android-integration-test:
+    name: Integration test on Android
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        device:
+          - "pixel_xl"
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - name: upgrade flutter to dev latest
+        run: |
+          flutter channel master
+          flutter upgrade
+          flutter --version
+      - name: run tests
+        timeout-minutes: 30
+        uses: reactivecircus/android-emulator-runner@v2.14.2
+        with:
+          api-level: 28
+          profile: ${{ matrix.device }}
+          script: | 
+            /Users/runner/Library/Android/sdk/tools/bin/avdmanager list
+            sleep 20
+            flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+  integration_test_chrome:
+    name: Integration test on Chrome
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '1.26.x'
+        # currently web support is only available on the dev branch
+        # and not on stable branch
+        # change this to stable the moment desktop support becomes available on stable
+        channel: 'dev'
+    - name: Enable Web support
+      run: flutter config --enable-web
+    - name: Run pub get
+      run: flutter pub get
+    - uses: nanasess/setup-chromedriver@master
+      with:
+        # Optional: do not specify to match Chrome's version
+        # Check version here: https://chromedriver.chromium.org/downloads
+        chromedriver-version: '87.0.4280.88'
+    - name: run chromedriver and tests
+      run: |
+        export DISPLAY=:99
+        chromedriver --port=4444 &
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart --browser-name=chrome --release

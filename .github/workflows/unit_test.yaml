@@ -1,0 +1,21 @@
+name:  Run unit tests
+on:
+  pull_request:
+    branches: [ master, develop ]
+jobs:
+  unit_test:
+    name: Unit test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup Dart Stable
+        uses: DanTup/gh-actions/setup-dart@master
+        with:
+          channel: stable
+      - name: Setup Flutter Stable
+        id: flutter
+        uses: DanTup/gh-actions/setup-flutter@master
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter test

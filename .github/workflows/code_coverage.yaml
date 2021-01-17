@@ -1,0 +1,21 @@
+name:  Check code coverage
+on:
+  pull_request:
+    branches: [ master, develop ]
+jobs:
+  code_coverage:
+    name: Code coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: subosito/flutter-action@master
+        with:
+         flutter-version: '1.22.5'
+         channel: 'stable'
+      - run: flutter pub get
+      - run: flutter test --coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage/lcov.info
