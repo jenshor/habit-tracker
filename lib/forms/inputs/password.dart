@@ -3,8 +3,8 @@ import 'package:formz/formz.dart';
 enum PasswordError { empty }
 
 class Password extends FormzInput<String, PasswordError> {
-  Password.dirty(String password) : super.dirty(password);
-  Password.pure(String password) : super.pure(password);
+  const Password.dirty(String password) : super.dirty(password);
+  const Password.pure() : super.pure('');
 
   @override
   PasswordError validator(String password) {
