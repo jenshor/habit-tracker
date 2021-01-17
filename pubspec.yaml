@@ -29,6 +29,7 @@ dependencies:
   firebase_analytics: ^7.0.1
   firebase_auth: ^0.20.0+1
   firebase_core: ^0.7.0
+  formz: ^0.3.2
 
 dev_dependencies:
   flutter_driver:
