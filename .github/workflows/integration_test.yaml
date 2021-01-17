@@ -1,7 +1,7 @@
 name: Run integration tests
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
 jobs:
   integration_test_ios:
     name: Integration test on iOS
@@ -32,7 +32,7 @@ jobs:
         cd ios
         pod install
     - name: Run test
-      run: flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+      run: flutter drive --target=test_driver/app.dart
   integration_test_macos:
     name: Integration test on MacOS
     runs-on: macos-latest
@@ -48,7 +48,7 @@ jobs:
     - name: Enable MacOS desktop support
       run: flutter config --enable-macos-desktop
     - name: Run test
-      run: flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart -d macos
+      run: flutter drive --target=test_driver/app.dart -d macos
   # integration_test_linux:
   #   name: Integration test on Ubuntu
   #   runs-on: ubuntu-latest
@@ -72,7 +72,7 @@ jobs:
   #     run: flutter config --enable-linux-desktop
   #   - name: Run test
   #     run: |
-  #       flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+  #       flutter drive --target=test_driver/app.dart
   integration_test_windows:
     name: Integration test on Windows
     runs-on: windows-latest
@@ -88,7 +88,7 @@ jobs:
     - name: Enable Windows desktop support
       run: flutter config --enable-windows-desktop
     - name: Run test
-      run: flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+      run: flutter drive --target=test_driver/app.dart
   # yaml obtained from https://medium.com/better-programming/test-flutter-apps-on-android-with-github-actions-abdba2137b4
   android-integration-test:
     name: Integration test on Android
@@ -120,7 +120,7 @@ jobs:
           script: | 
             /Users/runner/Library/Android/sdk/tools/bin/avdmanager list
             sleep 20
-            flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart
+            flutter drive --target=test_driver/app.dart
   integration_test_chrome:
     name: Integration test on Chrome
     runs-on: ubuntu-latest
@@ -146,4 +146,4 @@ jobs:
       run: |
         export DISPLAY=:99
         chromedriver --port=4444 &
-        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & flutter drive --target=integration_test/app_test.dart --driver=integration_test/driver.dart --browser-name=chrome --release
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & flutter drive --target=test_driver/app.dart --browser-name=chrome --release
