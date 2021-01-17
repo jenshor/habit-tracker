@@ -1,6 +1,4 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:habit_tracker/cubits/login_cubit/login_cubit.dart';
 import 'package:habit_tracker/forms/inputs/email.dart';
@@ -12,44 +10,136 @@ import 'package:test/test.dart';
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
 
+Email defaultEmail = Email.dirty('a@test.com');
+Password defaultPassword = Password.dirty('password');
+
 main() {
   var authRepo = MockAuthenticationRepository();
   group('LoginCubit', () {
-    blocTest(
-      'emits [] when created',
-      build: () => LoginCubit(authRepo),
-      expect: [],
-    );
-
+    testEmpty(authRepo);
     testEmailChanged(authRepo);
     testPasswordChanged(authRepo);
+    testLogInWithCredentialsWhenFormIsNotValid();
+    testLogInWithCredentialsWhenFormIsValid();
+    testLogInWithCredentialsWhenRepositoryThrowsException();
   });
 }
 
-void testEmailChanged(MockAuthenticationRepository authRepo) {
-  String email = 'a@test.com';
+void testEmpty(MockAuthenticationRepository authRepo) {
   blocTest(
-      'emits [LoginState(email: $email, status: invalid) when emailChanged is called',
+    'emits [] when created',
+    build: () => LoginCubit(authRepo),
+    expect: [],
+  );
+}
+
+void testEmailChanged(MockAuthenticationRepository authRepo) {
+  blocTest(
+      'emits [LoginState(email: ${defaultEmail.value}, status: invalid) when emailChanged is called',
       build: () => LoginCubit(authRepo),
-      act: (LoginCubit cubit) => cubit.emailChanged(email),
+      act: (LoginCubit cubit) => cubit.emailChanged(defaultEmail.value),
       expect: [
         LoginState(
-          email: Email.dirty(email),
+          email: defaultEmail,
           status: FormzStatus.invalid,
         )
       ]);
 }
 
 void testPasswordChanged(MockAuthenticationRepository authRepo) {
-  String password = 'password';
   blocTest(
-      'emits [LoginState(password: $password, status: invalid) when passwordChanged is called',
+      'emits [LoginState(password: ${defaultPassword.value}, status: invalid) when passwordChanged is called',
       build: () => LoginCubit(authRepo),
-      act: (LoginCubit cubit) => cubit.passwordChanged(password),
+      act: (LoginCubit cubit) => cubit.passwordChanged(defaultPassword.value),
       expect: [
         LoginState(
-          password: Password.dirty(password),
+          password: defaultPassword,
           status: FormzStatus.invalid,
         )
       ]);
 }
+
+void testLogInWithCredentialsWhenFormIsNotValid() {
+  var authRepo = MockAuthenticationRepository();
+  blocTest(
+    'emits [] and does not call any repository function when logInWithCredentials is called with invalid form',
+    build: () => LoginCubit(authRepo),
+    act: (LoginCubit cubit) => cubit.logInWithCredentials(),
+    expect: [],
+    verify: (cubit) {
+      verifyZeroInteractions(authRepo);
+    },
+  );
+}
+
+void testLogInWithCredentialsWhenFormIsValid() {
+  var authRepo = MockAuthenticationRepository();
+
+  var startLoginState = LoginState(
+    email: defaultEmail,
+    password: defaultPassword,
+    status: FormzStatus.valid,
+  );
+  blocTest(
+    """emits 
+      [LoginState, LoginState] and 
+      calls logInWithEmailAndPassword.""",
+    build: () => LoginCubit(
+      authRepo,
+      state: startLoginState,
+    ),
+    act: (LoginCubit cubit) => cubit.logInWithCredentials(),
+    expect: [
+      startLoginState.copyWith(status: FormzStatus.submissionInProgress),
+      startLoginState.copyWith(status: FormzStatus.submissionSuccess),
+    ],
+    verify: (cubit) {
+      verify(
+        authRepo.logInWithEmailAndPassword(
+          email: defaultEmail.value,
+          password: defaultPassword.value,
+        ),
+      );
+    },
+  );
+}
+
+void testLogInWithCredentialsWhenRepositoryThrowsException() {
+  MockAuthenticationRepository authRepo = MockAuthenticationRepository();
+  when(authRepo.logInWithEmailAndPassword(
+    email: defaultEmail.value,
+    password: defaultPassword.value,
+  )).thenThrow(Exception());
+
+  // TODO refactor redundant state later
+  var startLoginState = LoginState(
+    email: defaultEmail,
+    password: defaultPassword,
+    status: FormzStatus.valid,
+  );
+  blocTest(
+    """emits [
+      LoginState(status: FormzStatus.submissionInProgress), 
+      LoginState(status: FormzStatus.submissionFailure)] and 
+      calls logInWithEmailAndPassword""",
+    build: () => LoginCubit(
+      authRepo,
+      state: startLoginState,
+    ),
+    act: (LoginCubit cubit) => cubit.logInWithCredentials(),
+    expect: [
+      startLoginState.copyWith(status: FormzStatus.submissionInProgress),
+      startLoginState.copyWith(status: FormzStatus.submissionFailure),
+    ],
+    verify: (cubit) {
+      verify(
+        authRepo.logInWithEmailAndPassword(
+          email: defaultEmail.value,
+          password: defaultPassword.value,
+        ),
+      );
+    },
+  );
+}
+
+// TODO implement test for logInWithGoogle

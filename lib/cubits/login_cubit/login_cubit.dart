@@ -8,9 +8,11 @@ import 'package:habit_tracker/repositories/authentication_repository.dart';
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._authenticationRepository)
-      : assert(_authenticationRepository != null),
-        super(const LoginState());
+  LoginCubit(
+    this._authenticationRepository, {
+    LoginState state,
+  })  : assert(_authenticationRepository != null),
+        super(state ?? const LoginState());
 
   final AuthenticationRepository _authenticationRepository;
 
