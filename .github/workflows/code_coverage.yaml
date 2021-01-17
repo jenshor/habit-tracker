@@ -1,7 +1,7 @@
 name:  Check code coverage
 on:
   pull_request:
-    branches: [ master, develop ]
+    branches: [ main, develop ]
 jobs:
   code_coverage:
     name: Code coverage

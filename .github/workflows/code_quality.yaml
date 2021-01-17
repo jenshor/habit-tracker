@@ -1,7 +1,7 @@
 name:  Check code quality
 on:
   pull_request:
-    branches: [ master, develop ]
+    branches: [ main, develop ]
 jobs:
   code_quality:
     name: Code quality
