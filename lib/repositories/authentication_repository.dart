@@ -14,7 +14,7 @@ class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  Stream<model.User> get user {
+  Stream<model.User> getUsers() {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
       return firebaseUser != null ? firebaseUser.toUser : null;
     });
@@ -26,27 +26,38 @@ class AuthenticationRepository {
   }) async {
     assert(email != null && password != null);
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await createUserWithEmailAndPassword(email, password);
     } on Exception {
       throw SignUpFailure();
     }
   }
 
+  Future<UserCredential> createUserWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    return await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
   Future<void> logInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      await _firebaseAuth.signInWithCredential(credential);
+      await signInWithCredential();
     } on Exception {
       throw LogInWithGoogleFailure();
     }
+  }
+
+  Future<UserCredential> signInWithCredential() async {
+    final googleUser = await _googleSignIn.signIn();
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    return await _firebaseAuth.signInWithCredential(credential);
   }
 
   Future<void> logInWithEmailAndPassword({
@@ -55,24 +66,35 @@ class AuthenticationRepository {
   }) async {
     assert(email != null && password != null);
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await signInWithEmailAndPassword(email, password);
     } on Exception {
       throw LogInWithEmailAndPasswordFailure();
     }
   }
 
+  Future<UserCredential> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    return await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
   Future<void> logOut() async {
     try {
-      await Future.wait([
-        _firebaseAuth.signOut(),
-        _googleSignIn.signOut(),
-      ]);
+      await signOut();
     } on Exception {
       throw LogOutFailure();
     }
+  }
+
+  Future signOut() async {
+    await Future.wait([
+      _firebaseAuth.signOut(),
+      _googleSignIn.signOut(),
+    ]);
   }
 }
 
