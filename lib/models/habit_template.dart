@@ -1,9 +1,13 @@
-import 'habit.dart';
+import 'package:habit_tracker/models/volume.dart';
 
 class HabitTemplate {
-  Habit habit;
+  String name;
+  Volume volume;
+  DateTime creationTime;
 
   HabitTemplate({
-    this.habit,
+    this.name,
+    this.volume,
+    this.creationTime,
   });
 }

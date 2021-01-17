@@ -4,7 +4,6 @@ class Habit {
   String id;
   String name;
   Unit unit;
-  DateTime creationTime;
   DateTime lastChangedTime;
   DateTime completionTime;
 
@@ -12,7 +11,6 @@ class Habit {
     this.id,
     this.name,
     this.unit,
-    this.creationTime,
     this.lastChangedTime,
     this.completionTime,
   });

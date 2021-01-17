@@ -1,30 +1,27 @@
 import 'package:habit_tracker/models/unit.dart';
+import 'package:habit_tracker/models/volume.dart';
 import 'package:test/test.dart';
 
-Unit createTimeBasedUnit(
+Volume createTimeBasedVolume(
   int amount,
 ) {
-  return Unit(
-    name: 'minute',
-    amount: amount,
-    symbol: 'm',
-  );
+  return Volume(amount: amount, unit: Unit(name: 'minute', symbol: 'm'));
 }
 
 void testTextWithName(
   int amount,
   String expected,
 ) {
-  var result = createTimeBasedUnit(amount).toTextWithName();
+  var result = createTimeBasedVolume(amount).toExtendedText();
   expect(result, equals(expected));
 }
 
 main() {
   group('Test method', () {
-    Unit unit = createTimeBasedUnit(30);
+    Volume unit = createTimeBasedVolume(30);
 
     test('toTextWithSymbol: Expect amount and symbol', () {
-      var result = unit.toTextWithSymbol();
+      var result = unit.toSymbolText();
       expect(result, equals('30m'));
     });
 
