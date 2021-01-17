@@ -27,10 +27,6 @@ jobs:
         channel: stable
     - name: Run pub get
       run: flutter pub get
-    - name: Remove boguous podfile
-      run: |
-        rm ios/Flutter/Flutter.podspec
-        flutter clean
     - name: Pod setup
       run: | 
         cd ios
