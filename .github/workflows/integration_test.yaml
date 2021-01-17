@@ -33,22 +33,22 @@ jobs:
         pod install
     - name: Run test
       run: flutter drive --target=test_driver/app.dart
-  integration_test_macos:
-    name: Integration test on MacOS
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@master
-    - uses: subosito/flutter-action@v1
-      with:
-        flutter-version: '1.26.x'
-        # currently macos-desktop support is only available on the dev branch
-        # and not on stable branch
-        # change this to stable the moment desktop support becomes available on stable
-        channel: 'dev'
-    - name: Enable MacOS desktop support
-      run: flutter config --enable-macos-desktop
-    - name: Run test
-      run: flutter drive --target=test_driver/app.dart -d macos
+  # integration_test_macos:
+  #   name: Integration test on MacOS
+  #   runs-on: macos-latest
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - uses: subosito/flutter-action@v1
+  #     with:
+  #       flutter-version: '1.26.x'
+  #       # currently macos-desktop support is only available on the dev branch
+  #       # and not on stable branch
+  #       # change this to stable the moment desktop support becomes available on stable
+  #       channel: 'dev'
+  #   - name: Enable MacOS desktop support
+  #     run: flutter config --enable-macos-desktop
+  #   - name: Run test
+  #     run: flutter drive --target=test_driver/app.dart -d macos
   # integration_test_linux:
   #   name: Integration test on Ubuntu
   #   runs-on: ubuntu-latest
