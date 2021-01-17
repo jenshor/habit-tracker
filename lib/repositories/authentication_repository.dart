@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habit_tracker/exceptions/exceptions.dart';
+import 'package:habit_tracker/models/id.dart';
 import 'package:meta/meta.dart';
 import 'package:habit_tracker/models/user.dart' as model;
 
@@ -101,7 +102,7 @@ class AuthenticationRepository {
 extension on User {
   model.User get toUser {
     return model.User(
-      id: uid,
+      id: Id(uid),
       email: email,
       name: displayName,
       // TODO think about implementing this later

@@ -1,15 +1,18 @@
 import 'dart:convert';
 
-class Unit {
-  String id;
-  String symbol;
-  String name;
+import 'package:habit_tracker/models/id.dart';
+
+import 'model.dart';
+
+class Unit extends Model {
+  final String symbol;
+  final String name;
 
   Unit({
-    this.id,
+    Id id,
     this.symbol,
     this.name,
-  });
+  }) : super(id: id);
 
   Map<String, dynamic> toMap() {
     return {
@@ -32,4 +35,11 @@ class Unit {
   String toJson() => json.encode(toMap());
 
   factory Unit.fromJson(String source) => Unit.fromMap(json.decode(source));
+
+  @override
+  List<Object> get props => [
+        this.id,
+        this.symbol,
+        this.name,
+      ];
 }
