@@ -25,4 +25,12 @@ class LoginState extends Equatable {
       status: status ?? this.status,
     );
   }
+
+  @override
+  String toString() {
+    return """LoginState {
+      email: $email,
+      password: $password,
+      status: $status""";
+  }
 }
