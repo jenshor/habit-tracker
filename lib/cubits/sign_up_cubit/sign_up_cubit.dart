@@ -1,18 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:habit_tracker/forms/inputs/confirmed_password.dart';
 import 'package:habit_tracker/forms/inputs/email.dart';
 import 'package:habit_tracker/forms/inputs/password.dart';
 import 'package:habit_tracker/repositories/authentication_repository.dart';
-
+import 'package:habit_tracker/repositories/user_repository.dart';
+import 'package:habit_tracker/extensions/firebase_user.dart';
 part 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  SignUpCubit(this._authenticationRepository)
-      : assert(_authenticationRepository != null),
+  SignUpCubit(
+    this._userRepository,
+    this._authenticationRepository,
+  )   : assert(_authenticationRepository != null),
+        assert(_userRepository != null),
         super(const SignUpState());
 
+  final UserRepository _userRepository;
   final AuthenticationRepository _authenticationRepository;
 
   void emailChanged(String value) {
@@ -63,13 +69,37 @@ class SignUpCubit extends Cubit<SignUpState> {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      await _authenticationRepository.signUp(
-        email: state.email.value,
-        password: state.password.value,
-      );
+      await signUp();
+      signIn();
+
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on Exception {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
+  }
+
+  Future createUserAfterSignUpAndSignIn() async {
+    UserCredential userCred = await signUpAndSignInWithEmailAndPassword();
+    User user = userCred.user;
+    this._userRepository.addItem(user.toUserModel());
+  }
+
+  Future<UserCredential> signUpAndSignInWithEmailAndPassword() async {
+    await signUp();
+    return signIn();
+  }
+
+  Future<UserCredential> signIn() async {
+    return _authenticationRepository.signInWithEmailAndPassword(
+      state.email.value,
+      state.password.value,
+    );
+  }
+
+  Future signUp() async {
+    await _authenticationRepository.signUp(
+      email: state.email.value,
+      password: state.password.value,
+    );
   }
 }
