@@ -69,8 +69,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      await signUp();
-      signIn();
+      await createUserAfterSignUpAndSignIn();
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on Exception {
@@ -81,7 +80,8 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future createUserAfterSignUpAndSignIn() async {
     UserCredential userCred = await signUpAndSignInWithEmailAndPassword();
     User user = userCred.user;
-    this._userRepository.addItem(user.toUserModel());
+
+    this._userRepository.setItem(user.toUserModel());
   }
 
   Future<UserCredential> signUpAndSignInWithEmailAndPassword() async {

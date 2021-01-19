@@ -49,6 +49,10 @@ class FirestoreRepository<Item extends Model> {
     return getDocument(item.id.value);
   }
 
+  Future setItem(Item item) async {
+    return getItem(item).set(item.toMap());
+  }
+
   Future updateItem(Item item) {
     return getItem(item).update(item.toMap());
   }
