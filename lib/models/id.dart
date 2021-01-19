@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class Id {
+import 'package:equatable/equatable.dart';
+
+class Id extends Equatable {
   String value;
   Id(
     this.value,
@@ -23,4 +25,10 @@ class Id {
   String toJson() => json.encode(toMap());
 
   factory Id.fromJson(String source) => Id.fromMap(json.decode(source));
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [value];
 }

@@ -1,7 +1,10 @@
 import 'dart:convert';
+
+import 'package:meta/meta.dart';
+
 import 'package:habit_tracker/models/model.dart';
 import 'package:habit_tracker/models/volume.dart';
-import 'package:meta/meta.dart';
+
 import 'id.dart';
 
 class HabitTemplate extends Model {
@@ -9,8 +12,8 @@ class HabitTemplate extends Model {
   final Volume volume;
 
   HabitTemplate({
-    @required Id id,
-    this.name,
+    Id id,
+    @required this.name,
     this.volume,
   }) : super(id: id);
 
@@ -43,4 +46,19 @@ class HabitTemplate extends Model {
         this.volume,
         this.id,
       ];
+
+  HabitTemplate copyWith({
+    Id id,
+    String name,
+    Volume volume,
+  }) {
+    return HabitTemplate(
+      name: name ?? this.name,
+      volume: volume ?? this.volume,
+      id: id,
+    );
+  }
+
+  @override
+  bool get stringify => true;
 }
