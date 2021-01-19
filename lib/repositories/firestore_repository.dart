@@ -49,6 +49,8 @@ class FirestoreRepository<Item extends Model> {
     return getDocument(item.id.value);
   }
 
+  // Can be used to add an item based with a specific id if
+  // no item in Firestore with that id exists.
   Future setItem(Item item) async {
     return getItem(item).set(item.toMap());
   }
