@@ -49,6 +49,9 @@ class Habit extends Model {
     );
   }
 
+  @override
+  bool get stringify => true;
+
   String toJson() => json.encode(toMap());
 
   factory Habit.fromJson(String source) => Habit.fromMap(json.decode(source));

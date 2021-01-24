@@ -19,13 +19,45 @@ main() {
   group('HabitBloc', () {
     // TODO see HabitTemplateBlocTest for details about this methods
     // test is required, however the code is similar to that in HabitTemplateBlocTest
-    // testTemplatesLoaded();
+    testDefaultHabitLoaded();
     // testAddTemplate();
     // testDeleteTemplate();
     // testChangeTemplate();
 
-    testCompletionToggled();
+    // testCompletionToggled();
   });
+}
+
+void testDefaultHabitLoaded() {
+  DateTime date = DateTime.now();
+  Habit habit = Habit(
+    id: Id.fromDate(
+      date: date,
+    ),
+  );
+
+  DateTimeProvider dateTimeProvider = DateTimeProviderMock();
+  when(dateTimeProvider.getCurrentTime()).thenReturn(date);
+  RepositoryMockHelper<Habit> mockHelper = RepositoryMockHelper<Habit>(
+    repository: MockHabitRepository(),
+  );
+  mockHelper.setupGetStreamOfItems();
+  mockHelper.addItemsToStream([]);
+
+  blocTest(
+    'emits [default Habit] when HabitsLoading is called.',
+    build: () => HabitBloc(
+      repository: mockHelper.repository,
+      dateTimeProvider: dateTimeProvider,
+    ),
+    act: (HabitBloc bloc) => bloc.add(HabitsLoading()),
+    expect: [
+      HabitState.loading(),
+      HabitState.loaded(
+        HashMapHelper.createMapFromItem(habit),
+      ),
+    ],
+  );
 }
 
 void testCompletionToggled() {

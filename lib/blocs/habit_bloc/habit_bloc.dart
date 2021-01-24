@@ -7,6 +7,7 @@ import 'package:habit_tracker/blocs/loading_status.dart';
 import 'package:habit_tracker/helper/date_time_provider.dart';
 import 'package:habit_tracker/helper/hash_map_helper.dart';
 import 'package:habit_tracker/models/habit.dart';
+import 'package:habit_tracker/models/id.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
 import 'package:meta/meta.dart';
 part 'habit_event.dart';
@@ -30,7 +31,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     HabitEvent event,
   ) async* {
     if (event is HabitsLoading) {
-      _mapHabitTemplateLoadingToState();
+      yield* _mapHabitTemplateLoadingToState();
     }
     if (event is HabitsLoaded) {
       yield* _mapHabitTemplateLoadedToState(event);
@@ -40,15 +41,31 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     }
   }
 
-  void _mapHabitTemplateLoadingToState() {
+  Stream<HabitState> _mapHabitTemplateLoadingToState() async* {
     repository.getStreamOfItems().forEach(
           (List<Habit> habitTemplates) => add(
             HabitsLoaded(habitTemplates),
           ),
         );
+
+    yield HabitState.loading();
+  }
+
+  Habit createDefaultHabit() {
+    return Habit(
+      id: Id.fromDate(
+        date: dateTimeProvider.getCurrentTime(),
+      ),
+    );
   }
 
   Stream<HabitState> _mapHabitTemplateLoadedToState(HabitsLoaded event) async* {
+    if (event.habits.isEmpty) {
+      event.habits.add(
+        createDefaultHabit(),
+      );
+    }
+
     yield HabitState.loaded(
       HashMapHelper.createMapFromItems(
         event.habits,

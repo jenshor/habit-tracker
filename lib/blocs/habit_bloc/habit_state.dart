@@ -27,5 +27,8 @@ class HabitState extends Equatable {
         );
 
   @override
-  List<Object> get props => [];
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [status, habits];
 }
