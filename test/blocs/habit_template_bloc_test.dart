@@ -10,8 +10,9 @@ import 'package:test/test.dart';
 import '../mocks/repository_mock.dart';
 import '../mocks/repository_mock_helper.dart';
 
-Id defaultId = Id('1');
-String defaultTemplateName = 'Test Habit';
+final Id defaultId = Id('1');
+final String defaultTemplateName = 'Test Habit';
+
 main() {
   group('HabitTemplateBloc', () {
     testTemplatesLoaded();
