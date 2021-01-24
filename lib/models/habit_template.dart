@@ -55,7 +55,7 @@ class HabitTemplate extends Model {
     return HabitTemplate(
       name: name ?? this.name,
       volume: volume ?? this.volume,
-      id: id,
+      id: id ?? this.id,
     );
   }
 

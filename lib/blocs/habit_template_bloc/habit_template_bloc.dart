@@ -4,7 +4,6 @@ import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:habit_tracker/models/habit_template.dart';
-import 'package:habit_tracker/models/id.dart';
 import 'package:habit_tracker/repositories/habit_template_repository.dart';
 import 'package:meta/meta.dart';
 part 'habit_template_event.dart';
@@ -36,6 +35,9 @@ class HabitTemplateBloc extends Bloc<HabitTemplateEvent, HabitTemplateState> {
     if (event is HabitTemplateDeleted) {
       yield* _mapHabitTemplateDeletedToState(event);
     }
+    if (event is HabitTemplateChanged) {
+      yield* _mapHabitTemplateChangedToState(event);
+    }
   }
 
   void _mapHabitTemplateLoadingToState() {
@@ -55,6 +57,11 @@ class HabitTemplateBloc extends Bloc<HabitTemplateEvent, HabitTemplateState> {
         value: (v) => v,
       ),
     );
+  }
+
+  Stream<HabitTemplateState> _mapHabitTemplateChangedToState(
+      HabitTemplateChanged event) async* {
+    repository.updateItem(event.habitTemplate);
   }
 
   Stream<HabitTemplateState> _mapHabitTemplateDeletedToState(

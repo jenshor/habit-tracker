@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:meta/meta.dart';
 import 'package:habit_tracker/models/model.dart';
 import 'package:habit_tracker/repositories/repository.dart';
 import 'package:mockito/mockito.dart';
@@ -7,35 +7,58 @@ import 'package:mockito/mockito.dart';
 class RepositoryMockHelper<Item extends Model> {
   final Repository<Item> repository;
   final StreamController<List<Item>> streamController;
-  RepositoryMockHelper(this.repository)
+  RepositoryMockHelper({@required this.repository})
       : streamController = StreamController<List<Item>>();
 
   void setupAddItem(
-    Item template,
-  ) {
+    Item item, {
+    List<Item> itemsReturnedByStream,
+  }) {
+    if (itemsReturnedByStream == null) {
+      itemsReturnedByStream = [item];
+    }
+
     when(
-      repository.addItem(template),
+      repository.addItem(item),
     ).thenAnswer(
       (Invocation i) {
-        streamController.add([template]);
-        return Future<String>.value(template.id.value);
+        streamController.add(itemsReturnedByStream);
+        return Future<String>.value(item.id.value);
       },
     );
   }
 
   void setupDeleteItem(
-    Item itemToDelete, {
-    List<Item> habitTemplatesToBeEmittedByStream,
+    Item deletedItem, {
+    List<Item> itemsReturnedByStream,
   }) {
-    if (habitTemplatesToBeEmittedByStream == null) {
-      habitTemplatesToBeEmittedByStream = List<Item>.empty();
+    if (itemsReturnedByStream == null) {
+      itemsReturnedByStream = List<Item>.empty();
     }
 
     when(
-      repository.deleteItem(itemToDelete),
+      repository.deleteItem(deletedItem),
     ).thenAnswer(
       (Invocation i) {
-        streamController.add(habitTemplatesToBeEmittedByStream);
+        streamController.add(itemsReturnedByStream);
+        return Future.value();
+      },
+    );
+  }
+
+  void setupUpdateItem(
+    Item updatedItem, {
+    List<Item> itemsReturnedByStream,
+  }) {
+    if (itemsReturnedByStream == null) {
+      itemsReturnedByStream = List<Item>.empty();
+    }
+
+    when(
+      repository.updateItem(updatedItem),
+    ).thenAnswer(
+      (Invocation i) {
+        streamController.add(itemsReturnedByStream);
         return Future.value();
       },
     );

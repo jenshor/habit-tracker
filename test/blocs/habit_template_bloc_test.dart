@@ -10,18 +10,22 @@ import '../mocks/repository_mock.dart';
 import '../mocks/repository_mock_helper.dart';
 
 Id defaultId = Id('1');
-
+String defaultTemplateName = 'Test Habit';
 main() {
   group('HabitTemplateBloc', () {
     testAddTemplate();
     testDeleteTemplate();
+    testChangeTemplate();
   });
 }
 
 void testAddTemplate() {
-  HabitTemplate template = HabitTemplate(name: 'Test Habit', id: defaultId);
+  HabitTemplate template =
+      HabitTemplate(name: defaultTemplateName, id: defaultId);
   RepositoryMockHelper<HabitTemplate> mockHelper =
-      RepositoryMockHelper<HabitTemplate>(MockHabitTemplateRepository());
+      RepositoryMockHelper<HabitTemplate>(
+    repository: MockHabitTemplateRepository(),
+  );
   mockHelper.setupAddItem(template);
   mockHelper.setupGetStreamOfItems();
 
@@ -33,7 +37,7 @@ void testAddTemplate() {
           HabitTemplateAdded(template),
         ),
       expect: [
-        HabitTemplateState.loaded(habitTemplateToMap(
+        HabitTemplateState.loaded(createMapFromSingleTemplate(
           template.copyWith(
             id: defaultId,
           ),
@@ -43,16 +47,21 @@ void testAddTemplate() {
 }
 
 void testDeleteTemplate() {
-  HabitTemplate template = HabitTemplate(name: 'Test Habit', id: defaultId);
+  HabitTemplate template =
+      HabitTemplate(name: defaultTemplateName, id: defaultId);
   RepositoryMockHelper<HabitTemplate> mockHelper =
-      RepositoryMockHelper<HabitTemplate>(MockHabitTemplateRepository());
+      RepositoryMockHelper<HabitTemplate>(
+    repository: MockHabitTemplateRepository(),
+  );
   mockHelper.setupDeleteItem(template);
   mockHelper.setupGetStreamOfItems();
   blocTest(
     'emits [] when HabitTemplateDeleted is called.',
     build: () => HabitTemplateBloc(
       repository: mockHelper.repository,
-      state: HabitTemplateState.loaded(habitTemplateToMap(template)),
+      state: HabitTemplateState.loaded(
+        createMapFromSingleTemplate(template),
+      ),
     ),
     act: (HabitTemplateBloc bloc) => bloc
       ..add(HabitTemplateLoading())
@@ -65,6 +74,41 @@ void testDeleteTemplate() {
   );
 }
 
-HashMap<String, HabitTemplate> habitTemplateToMap(HabitTemplate template) {
+void testChangeTemplate() {
+  HabitTemplate template =
+      HabitTemplate(name: defaultTemplateName, id: defaultId);
+  HabitTemplate updatedTemplate =
+      template.copyWith(name: '$defaultTemplateName 2');
+  RepositoryMockHelper<HabitTemplate> mockHelper =
+      RepositoryMockHelper<HabitTemplate>(
+    repository: MockHabitTemplateRepository(),
+  );
+  mockHelper.setupUpdateItem(
+    updatedTemplate,
+    itemsReturnedByStream: [updatedTemplate],
+  );
+  mockHelper.setupGetStreamOfItems();
+
+  blocTest(
+    'emits [HabitTemplate(name: $defaultTemplateName 2)] when HabitTemplateChanged is called.',
+    build: () => HabitTemplateBloc(
+      repository: mockHelper.repository,
+      state: HabitTemplateState.loaded(
+        createMapFromSingleTemplate(template),
+      ),
+    ),
+    act: (HabitTemplateBloc bloc) => bloc
+      ..add(HabitTemplateLoading())
+      ..add(
+        HabitTemplateChanged(updatedTemplate),
+      ),
+    expect: [
+      HabitTemplateState.loaded(createMapFromSingleTemplate(updatedTemplate)),
+    ],
+  );
+}
+
+HashMap<String, HabitTemplate> createMapFromSingleTemplate(
+    HabitTemplate template) {
   return HashMap<String, HabitTemplate>.from({template.id.value: template});
 }
