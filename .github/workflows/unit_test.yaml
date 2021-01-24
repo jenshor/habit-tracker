@@ -8,14 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Setup Dart Stable
-        uses: DanTup/gh-actions/setup-dart@master
+      - uses: subosito/flutter-action@master
         with:
-          channel: stable
-      - name: Setup Flutter Stable
-        id: flutter
-        uses: DanTup/gh-actions/setup-flutter@master
-        with:
-          channel: stable
+         flutter-version: '1.26.x'
+         channel: 'dev'
       - run: flutter pub get
       - run: flutter test
