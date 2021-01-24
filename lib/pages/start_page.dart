@@ -25,13 +25,13 @@ class _StartPageState extends State<StartPage> {
                 children: [
                   ButtonBar(
                     children: [
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () {
                           navigateToLoginPage(context);
                         },
                         child: Text('Log in'),
                       ),
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           navigateToSignUpPage(context);
                         },
