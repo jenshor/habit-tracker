@@ -53,15 +53,15 @@ class FirestoreRepository<Item extends Model> {
   // no item in Firestore with that id exists.
   // e.g. addItem would generate a random id for that item
   // ignoring the already set id
-  Future setItem(Item item) async {
+  Future<void> setItem(Item item) async {
     return getItem(item).set(item.toMap());
   }
 
-  Future updateItem(Item item) {
+  Future<void> updateItem(Item item) {
     return getItem(item).update(item.toMap());
   }
 
-  Future deleteItem(Item item) {
+  Future<void> deleteItem(Item item) {
     return getDocument(item.id.value).delete();
   }
 

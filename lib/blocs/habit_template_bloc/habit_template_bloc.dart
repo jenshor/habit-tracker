@@ -15,29 +15,55 @@ class HabitTemplateBloc extends Bloc<HabitTemplateEvent, HabitTemplateState> {
 
   HabitTemplateBloc({
     @required this.repository,
+    HabitTemplateState state,
   }) : super(
-          HabitTemplateState.uninitialized(),
+          state ?? HabitTemplateState.uninitialized(),
         );
 
   @override
   Stream<HabitTemplateState> mapEventToState(
     HabitTemplateEvent event,
   ) async* {
+    if (event is HabitTemplateLoading) {
+      _mapHabitTemplateLoadingToState();
+    }
+    if (event is HabitTemplateLoaded) {
+      yield* _mapHabitTemplateLoadedToState(event);
+    }
     if (event is HabitTemplateAdded) {
       yield* _mapHabitTemplateAddedToState(event);
     }
-    if (event is HabitTemplateDeleted) {}
+    if (event is HabitTemplateDeleted) {
+      yield* _mapHabitTemplateDeletedToState(event);
+    }
+  }
+
+  void _mapHabitTemplateLoadingToState() {
+    repository.getStreamOfItems().forEach(
+          (List<HabitTemplate> habitTemplates) => add(
+            HabitTemplateLoaded(habitTemplates),
+          ),
+        );
+  }
+
+  Stream<HabitTemplateState> _mapHabitTemplateLoadedToState(
+      HabitTemplateLoaded event) async* {
+    yield HabitTemplateState.loaded(
+      HashMap<String, HabitTemplate>.fromIterable(
+        event.habitTemplates,
+        key: (k) => k.id.value,
+        value: (v) => v,
+      ),
+    );
+  }
+
+  Stream<HabitTemplateState> _mapHabitTemplateDeletedToState(
+      HabitTemplateDeleted event) async* {
+    repository.deleteItem(event.habitTemplate);
   }
 
   Stream<HabitTemplateState> _mapHabitTemplateAddedToState(
       HabitTemplateAdded event) async* {
-    HabitTemplate newHabitTemplate = event.habitTemplate;
-    String itemId = await repository.addItem(newHabitTemplate);
-    HabitTemplate firestoreHabitTemplate =
-        newHabitTemplate.copyWith(id: Id(itemId));
-
-    HashMap<String, HabitTemplate> templates = state.habitTemplates;
-    templates.putIfAbsent(itemId, () => firestoreHabitTemplate);
-    yield HabitTemplateState.loaded(templates);
+    await repository.addItem(event.habitTemplate);
   }
 }
