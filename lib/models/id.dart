@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class Id extends Equatable {
-  String value;
+  final String value;
   Id(
     this.value,
   );

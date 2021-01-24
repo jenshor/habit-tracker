@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:habit_tracker/blocs/habit_template_bloc/habit_template_bloc.dart';
+import 'package:habit_tracker/helper/hash_map_helper.dart';
 import 'package:habit_tracker/models/habit_template.dart';
 import 'package:habit_tracker/models/id.dart';
 import 'package:test/test.dart';
@@ -18,22 +19,6 @@ main() {
     testDeleteTemplate();
     testChangeTemplate();
   });
-}
-
-// TODO put this into Repository Mock helper as well
-HashMap<String, HabitTemplate> createMapFromSingleTemplate(
-    HabitTemplate template) {
-  return createMapFromTemplates([template]);
-}
-
-// TODO put this into Repository Mock helper as well
-HashMap<String, HabitTemplate> createMapFromTemplates(
-    List<HabitTemplate> templates) {
-  return HashMap<String, HabitTemplate>.fromIterable(
-    templates,
-    key: (k) => k.id.value,
-    value: (v) => v,
-  );
 }
 
 List<HabitTemplate> generateItemsForTemplatesLoadedTest() {
@@ -64,7 +49,7 @@ void testTemplatesLoaded() {
     ),
     expect: [
       HabitTemplateState.loaded(
-        createMapFromTemplates(templates),
+        HashMapHelper.createMapFromItems(templates),
       ),
     ],
   );
@@ -89,7 +74,7 @@ void testAddTemplate() {
         HabitTemplateAdded(template),
       ),
     expect: [
-      HabitTemplateState.loaded(createMapFromSingleTemplate(
+      HabitTemplateState.loaded(HashMapHelper.createMapFromItem(
         template.copyWith(
           id: defaultId,
         ),
@@ -112,7 +97,7 @@ void testDeleteTemplate() {
     build: () => HabitTemplateBloc(
       repository: mockHelper.repository,
       state: HabitTemplateState.loaded(
-        createMapFromSingleTemplate(template),
+        HashMapHelper.createMapFromItem(template),
       ),
     ),
     act: (HabitTemplateBloc bloc) => bloc
@@ -146,7 +131,7 @@ void testChangeTemplate() {
     build: () => HabitTemplateBloc(
       repository: mockHelper.repository,
       state: HabitTemplateState.loaded(
-        createMapFromSingleTemplate(template),
+        HashMapHelper.createMapFromItem(template),
       ),
     ),
     act: (HabitTemplateBloc bloc) => bloc
@@ -155,7 +140,9 @@ void testChangeTemplate() {
         HabitTemplateChanged(updatedTemplate),
       ),
     expect: [
-      HabitTemplateState.loaded(createMapFromSingleTemplate(updatedTemplate)),
+      HabitTemplateState.loaded(
+        HashMapHelper.createMapFromItem(updatedTemplate),
+      ),
     ],
   );
 }
