@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/models/model.dart';
+import 'package:habit_tracker/repositories/repository.dart';
 
 @immutable
-class FirestoreRepository<Item extends Model> {
+class FirestoreRepository<Item extends Model> extends Repository<Item> {
   final String _collectionParentPath;
 
   final Item Function(Map<String, dynamic>) _mapDataToItem;

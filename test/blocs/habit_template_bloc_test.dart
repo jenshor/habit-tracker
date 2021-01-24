@@ -1,12 +1,9 @@
-import 'dart:async';
 import 'dart:collection';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:habit_tracker/blocs/habit_template_bloc/habit_template_bloc.dart';
 import 'package:habit_tracker/models/habit_template.dart';
 import 'package:habit_tracker/models/id.dart';
-import 'package:habit_tracker/repositories/habit_template_repository.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../mocks/repository_mock.dart';
@@ -23,7 +20,8 @@ main() {
 
 void testAddTemplate() {
   HabitTemplate template = HabitTemplate(name: 'Test Habit', id: defaultId);
-  RepositoryMockHelper mockHelper = RepositoryMockHelper();
+  RepositoryMockHelper<HabitTemplate> mockHelper =
+      RepositoryMockHelper<HabitTemplate>(MockHabitTemplateRepository());
   mockHelper.setupAddItem(template);
   mockHelper.setupGetStreamOfItems();
 
@@ -46,7 +44,8 @@ void testAddTemplate() {
 
 void testDeleteTemplate() {
   HabitTemplate template = HabitTemplate(name: 'Test Habit', id: defaultId);
-  RepositoryMockHelper mockHelper = RepositoryMockHelper();
+  RepositoryMockHelper<HabitTemplate> mockHelper =
+      RepositoryMockHelper<HabitTemplate>(MockHabitTemplateRepository());
   mockHelper.setupDeleteItem(template);
   mockHelper.setupGetStreamOfItems();
   blocTest(

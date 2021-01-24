@@ -1,20 +1,17 @@
 import 'dart:async';
 
-import 'package:habit_tracker/models/habit_template.dart';
-import 'package:habit_tracker/repositories/habit_template_repository.dart';
+import 'package:habit_tracker/models/model.dart';
+import 'package:habit_tracker/repositories/repository.dart';
 import 'package:mockito/mockito.dart';
 
-import 'repository_mock.dart';
-
-class RepositoryMockHelper {
-  final HabitTemplateRepository repository;
-  final StreamController<List<HabitTemplate>> streamController;
-  RepositoryMockHelper()
-      : repository = MockHabitTemplateRepository(),
-        streamController = StreamController<List<HabitTemplate>>();
+class RepositoryMockHelper<Item extends Model> {
+  final Repository<Item> repository;
+  final StreamController<List<Item>> streamController;
+  RepositoryMockHelper(this.repository)
+      : streamController = StreamController<List<Item>>();
 
   void setupAddItem(
-    HabitTemplate template,
+    Item template,
   ) {
     when(
       repository.addItem(template),
@@ -27,11 +24,11 @@ class RepositoryMockHelper {
   }
 
   void setupDeleteItem(
-    HabitTemplate itemToDelete, {
-    List<HabitTemplate> habitTemplatesToBeEmittedByStream,
+    Item itemToDelete, {
+    List<Item> habitTemplatesToBeEmittedByStream,
   }) {
     if (habitTemplatesToBeEmittedByStream == null) {
-      habitTemplatesToBeEmittedByStream = List<HabitTemplate>.empty();
+      habitTemplatesToBeEmittedByStream = List<Item>.empty();
     }
 
     when(
