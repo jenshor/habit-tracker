@@ -3,9 +3,12 @@ import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:habit_tracker/blocs/loading_status.dart';
+import 'package:habit_tracker/helper/hash_map_helper.dart';
 import 'package:habit_tracker/models/habit_template.dart';
 import 'package:habit_tracker/repositories/habit_template_repository.dart';
 import 'package:meta/meta.dart';
+
 part 'habit_template_event.dart';
 part 'habit_template_state.dart';
 
@@ -51,10 +54,8 @@ class HabitTemplateBloc extends Bloc<HabitTemplateEvent, HabitTemplateState> {
   Stream<HabitTemplateState> _mapHabitTemplateLoadedToState(
       HabitTemplateLoaded event) async* {
     yield HabitTemplateState.loaded(
-      HashMap<String, HabitTemplate>.fromIterable(
+      HashMapHelper.createMapFromItems(
         event.habitTemplates,
-        key: (k) => k.id.value,
-        value: (v) => v,
       ),
     );
   }

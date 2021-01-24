@@ -7,7 +7,7 @@ import 'package:habit_tracker/models/habit_template.dart';
 import 'package:habit_tracker/models/id.dart';
 import 'package:test/test.dart';
 
-import '../mocks/repository_mock.dart';
+import '../mocks/repository_mocks.dart';
 import '../mocks/repository_mock_helper.dart';
 
 final Id defaultId = Id('1');

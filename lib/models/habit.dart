@@ -7,9 +7,12 @@ import 'model.dart';
 import 'unit.dart';
 
 class Habit extends Model {
+  // TODO is this name required?
   final String name;
   final Unit unit;
   final DateTime completionTime;
+
+  bool get isCompleted => completionTime != null;
 
   Habit({
     @required Id id,
@@ -49,4 +52,17 @@ class Habit extends Model {
   String toJson() => json.encode(toMap());
 
   factory Habit.fromJson(String source) => Habit.fromMap(json.decode(source));
+
+  Habit copyWith({
+    String name,
+    Unit unit,
+    DateTime completionTime,
+  }) {
+    return Habit(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      unit: unit ?? this.unit,
+      completionTime: completionTime ?? this.completionTime,
+    );
+  }
 }
