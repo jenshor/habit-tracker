@@ -22,7 +22,7 @@ class RepositoryMockHelper<Item extends Model> {
       repository.addItem(item),
     ).thenAnswer(
       (Invocation i) {
-        streamController.add(itemsReturnedByStream);
+        addItemsToStream(itemsReturnedByStream);
         return Future<String>.value(item.id.value);
       },
     );
@@ -40,7 +40,7 @@ class RepositoryMockHelper<Item extends Model> {
       repository.deleteItem(deletedItem),
     ).thenAnswer(
       (Invocation i) {
-        streamController.add(itemsReturnedByStream);
+        addItemsToStream(itemsReturnedByStream);
         return Future.value();
       },
     );
@@ -58,7 +58,7 @@ class RepositoryMockHelper<Item extends Model> {
       repository.updateItem(updatedItem),
     ).thenAnswer(
       (Invocation i) {
-        streamController.add(itemsReturnedByStream);
+        addItemsToStream(itemsReturnedByStream);
         return Future.value();
       },
     );
@@ -67,5 +67,13 @@ class RepositoryMockHelper<Item extends Model> {
   void setupGetStreamOfItems() {
     when(repository.getStreamOfItems())
         .thenAnswer((_) => streamController.stream);
+  }
+
+  void addItemToStream(Item item) {
+    addItemsToStream([item]);
+  }
+
+  void addItemsToStream(List<Item> items) {
+    streamController.add(items);
   }
 }
