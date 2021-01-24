@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@master
         with:
-          channel: stable
+         flutter-version: '1.26.x'
+         channel: 'dev'
       - run: flutter analyze
