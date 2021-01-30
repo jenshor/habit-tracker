@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:habit_tracker/blocs/habit_template_bloc/habit_template_bloc.dart';
 import 'package:habit_tracker/models/user.dart';
+import 'package:habit_tracker/pages/add_habit_template_page.dart';
 import 'package:habit_tracker/repositories/habit_template_repository.dart';
 import 'package:habit_tracker/widgets/habit_templates.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
@@ -20,6 +21,19 @@ class _StartPageState extends State<StartPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Habits'),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) => BlocProvider.value(
+                            value: BlocProvider.of<HabitTemplateBloc>(context),
+                            child: AddHabitTemplatePage()),
+                      ));
+                })
+          ],
         ),
         body: SingleChildScrollView(
           child: BlocBuilder<AuthenticationBloc, AuthenticationState>(

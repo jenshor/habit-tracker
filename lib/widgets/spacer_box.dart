@@ -5,6 +5,8 @@ class SpacerBox extends StatelessWidget {
 
   SpacerBox._(this.size);
 
+  SpacerBox.size8() : this._(8);
+  SpacerBox.size12() : this._(12);
   SpacerBox.size16() : this._(16);
   SpacerBox.size24() : this._(24);
   SpacerBox.size32() : this._(32);

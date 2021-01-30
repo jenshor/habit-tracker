@@ -5,6 +5,7 @@ import 'package:habit_tracker/models/habit_template.dart';
 import 'package:habit_tracker/models/user.dart';
 import 'package:habit_tracker/pages/add_habit_template_page.dart';
 import 'package:habit_tracker/widgets/habit_template_info.dart';
+import 'package:habit_tracker/widgets/spacer_box.dart';
 
 class HabitTemplates extends StatefulWidget {
   final User user;
@@ -22,26 +23,19 @@ class _HabitTemplatesState extends State<HabitTemplates> {
   Widget build(BuildContext context) {
     return BlocBuilder<HabitTemplateBloc, HabitTemplateState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            RaisedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (c) => BlocProvider.value(
-                          value: BlocProvider.of<HabitTemplateBloc>(context),
-                          child: AddHabitTemplatePage()),
-                    ));
-              },
-              child: Text('Create new Habit'),
-            ),
-            ...state.habitTemplates.values
-                .map((HabitTemplate habitTemplate) => HabitTemplateInfo(
-                      habitTemplate: habitTemplate,
-                    ))
-                .toList(),
-          ],
+        List<HabitTemplate> items = state.habitTemplates.values.toList();
+        return ListView.separated(
+          shrinkWrap: true,
+          itemCount: items.length,
+          separatorBuilder: (context, index) {
+            return SpacerBox.size12();
+          },
+          itemBuilder: (context, index) {
+            HabitTemplate habitTemplate = items[index];
+            return HabitTemplateInfo(
+              habitTemplate: habitTemplate,
+            );
+          },
         );
       },
     );
