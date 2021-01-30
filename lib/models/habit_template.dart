@@ -19,7 +19,7 @@ class HabitTemplate extends Model {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id.toMap(),
+      'id': id?.toMap(),
       'name': name,
       'volume': volume?.toMap(),
     };
