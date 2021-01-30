@@ -33,6 +33,7 @@ dependencies:
   flutter_bloc: ^6.1.1
   font_awesome_flutter: ^8.11.0
   formz: ^0.3.2
+  google_fonts: ^1.1.2
   google_sign_in: ^4.5.9
   pedantic: ^1.9.2
 
