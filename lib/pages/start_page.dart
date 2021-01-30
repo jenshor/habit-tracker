@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:habit_tracker/blocs/habit_template_bloc/habit_template_bloc.dart';
+import 'package:habit_tracker/models/user.dart';
+import 'package:habit_tracker/repositories/habit_template_repository.dart';
 import 'package:habit_tracker/widgets/habit_templates.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
 
@@ -25,14 +28,26 @@ class _StartPageState extends State<StartPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   state.status == AuthenticationStatus.authenticated
-                      ? HabitTemplates(
-                          user: state.user,
-                        )
+                      ? _app(state.user)
                       : LoginSignup(),
                 ],
               );
             },
           ),
         ));
+  }
+
+  Widget _app(User user) {
+    return RepositoryProvider(
+      create: (context) => HabitTemplateRepository(userId: user.id.value),
+      child: BlocProvider(
+        create: (context) => HabitTemplateBloc(
+          repository: RepositoryProvider.of<HabitTemplateRepository>(context),
+        ),
+        child: HabitTemplates(
+          user: user,
+        ),
+      ),
+    );
   }
 }
