@@ -1,69 +1,32 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:habit_tracker/repositories/authentication_repository.dart';
+import 'package:habit_tracker/repositories/user_repository.dart';
 
-void main() {
-  runApp(App());
-}
+import 'app.dart';
 
-class App extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Counter App',
-      home: MyHomePage(title: 'Counter App Home Page'),
-    );
-  }
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  AuthenticationRepository authRepo = AuthenticationRepository();
 
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter += 2;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              // Provide a Key to this specific Text widget. This allows
-              // identifying the widget from inside the test suite,
-              // and reading the text.
-              key: Key('counter'),
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        // Provide a Key to this button. This allows finding this
-        // specific button inside the test suite, and tapping it.
-        key: Key('increment'),
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
+  var providers = MultiRepositoryProvider(
+    providers: [
+      RepositoryProvider(create: (context) => authRepo),
+      RepositoryProvider(create: (context) => UserRepository())
+    ],
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (context) => AuthenticationBloc(
+                  authenticationRepository: authRepo,
+                )),
+      ],
+      child: App(),
+    ),
+  );
+  runApp(providers);
 }

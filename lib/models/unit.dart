@@ -1,32 +1,45 @@
-class Unit {
-  String id;
-  int amount;
-  String symbol;
-  String name;
+import 'dart:convert';
+
+import 'package:habit_tracker/models/id.dart';
+
+import 'model.dart';
+
+class Unit extends Model {
+  final String symbol;
+  final String name;
 
   Unit({
-    this.id,
-    this.amount,
+    Id id,
     this.symbol,
     this.name,
-  });
+  }) : super(id: id);
 
-  String toTextWithSymbol() {
-    return '$amount$symbol';
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'symbol': symbol,
+      'name': name,
+    };
   }
 
-  // TODO check for a better implementation later
-  String nameToText() {
-    String returnValue = name;
+  factory Unit.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
 
-    if (amount != 1) {
-      returnValue += 's';
-    }
-
-    return returnValue;
+    return Unit(
+      id: map['id'],
+      symbol: map['symbol'],
+      name: map['name'],
+    );
   }
 
-  String toTextWithName() {
-    return '$amount ${nameToText()}';
-  }
+  String toJson() => json.encode(toMap());
+
+  factory Unit.fromJson(String source) => Unit.fromMap(json.decode(source));
+
+  @override
+  List<Object> get props => [
+        this.id,
+        this.symbol,
+        this.name,
+      ];
 }
