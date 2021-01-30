@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/login_page.dart';
-import 'package:habit_tracker/pages/sign_up_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:habit_tracker/widgets/habit_templates.dart';
+import 'package:habit_tracker/widgets/login_signup.dart';
 
 class StartPage extends StatefulWidget {
-  StartPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  StartPage({Key key}) : super(key: key);
 
   @override
   _StartPageState createState() => _StartPageState();
@@ -16,45 +16,23 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text('Habits'),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              ButtonBar(
+          child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ButtonBar(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          navigateToLoginPage(context);
-                        },
-                        child: Text('Log in'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          navigateToSignUpPage(context);
-                        },
-                        child: Text('Sign up'),
-                      )
-                    ],
-                  )
+                  state.status == AuthenticationStatus.authenticated
+                      ? HabitTemplates(
+                          user: state.user,
+                        )
+                      : LoginSignup(),
                 ],
-              )
-            ],
+              );
+            },
           ),
         ));
-  }
-
-  void navigateToSignUpPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => SignUpPage(),
-    ));
-  }
-
-  void navigateToLoginPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LoginPage(),
-    ));
   }
 }

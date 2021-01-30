@@ -7,7 +7,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Counter App',
-      home: StartPage(title: 'Counter App Home Page'),
+      home: StartPage(),
     );
   }
 }
