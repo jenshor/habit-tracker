@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habit_tracker/constants/colors.dart';
 
 class Checkmark extends StatelessWidget {
@@ -11,8 +12,8 @@ class Checkmark extends StatelessWidget {
     return CircleAvatar(
       backgroundColor: isCompleted ? ConstantColors.green : ConstantColors.gray,
       child: Icon(
-        Icons.check,
-        size: 30,
+        FontAwesomeIcons.check,
+        size: 24,
         color: Colors.white,
       ),
     );

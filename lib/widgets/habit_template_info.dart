@@ -14,18 +14,21 @@ class HabitTemplateInfo extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24), color: Colors.white),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: Row(
           children: [
             Checkmark(
-              isCompleted: true,
+              isCompleted: false,
             ),
             SpacerBox.size24(),
             Column(
               children: [
                 Text(
                   habitTemplate.name,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             )
