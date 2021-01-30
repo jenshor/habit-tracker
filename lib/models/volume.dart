@@ -58,6 +58,9 @@ class Volume extends Model {
   factory Volume.fromJson(String source) => Volume.fromMap(json.decode(source));
 
   @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
+  List<Object> get props => [
+        this.id,
+        this.amount,
+        this.unit,
+      ];
 }
