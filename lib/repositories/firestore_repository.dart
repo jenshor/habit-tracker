@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/models/id.dart';
 import 'package:habit_tracker/models/model.dart';
 import 'package:habit_tracker/repositories/repository.dart';
 
@@ -74,17 +75,37 @@ class FirestoreRepository<Item extends Model> extends Repository<Item> {
     return collection.snapshots();
   }
 
+  Map<String, dynamic> setIdFromDocumentSnapshot(
+      Map<String, dynamic> data, DocumentSnapshot documentSnapshot) {
+    Id id = Id.fromMap(data['id']);
+    String documentId = documentSnapshot.id;
+    if (id == null) {
+      id = Id(documentId);
+    } else {
+      id = id.copyWith(value: documentId);
+    }
+
+    data['id'] = id.toMap();
+
+    return data;
+  }
+
+  Map<String, dynamic> prepareDateFromDocumentSnapshot(
+      DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> data = documentSnapshot.data();
+    return setIdFromDocumentSnapshot(data, documentSnapshot);
+  }
+
   List<Item> getListOfItemsFromQuerySnapshot(
     QuerySnapshot querySnapshot,
   ) {
-    return querySnapshot.docs
-        .map((
-          QueryDocumentSnapshot documentSnapshot,
-        ) =>
-            _mapDataToItem(
-              documentSnapshot.data(),
-            ))
-        .toList();
+    return querySnapshot.docs.map((
+      QueryDocumentSnapshot documentSnapshot,
+    ) {
+      Map<String, dynamic> data =
+          prepareDateFromDocumentSnapshot(documentSnapshot);
+      return _mapDataToItem(data);
+    }).toList();
   }
 
   Stream<List<Item>> getStreamOfItems() {

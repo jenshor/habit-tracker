@@ -43,7 +43,9 @@ class _StartPageState extends State<StartPage> {
       child: BlocProvider(
         create: (context) => HabitTemplateBloc(
           repository: RepositoryProvider.of<HabitTemplateRepository>(context),
-        ),
+        )..add(
+            HabitTemplateLoading(),
+          ),
         child: HabitTemplates(
           user: user,
         ),

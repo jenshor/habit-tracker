@@ -15,7 +15,9 @@ class HabitTemplate extends Model {
     Id id,
     @required this.name,
     this.volume,
-  }) : super(id: id);
+  }) : super(
+          id: id ?? Id.fromDate(date: DateTime.now()),
+        );
 
   Map<String, dynamic> toMap() {
     return {
