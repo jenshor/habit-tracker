@@ -24,7 +24,7 @@ main() {
     // testDeleteTemplate();
     // testChangeTemplate();
 
-    // testCompletionToggled();
+    testCompletionToggled();
   });
 }
 
@@ -91,6 +91,7 @@ void testCompletionToggled() {
         HabitCompletionToggled(habit: habit),
       ),
     expect: [
+      HabitState.loading(),
       HabitState.loaded(
         HashMapHelper.createMapFromItem(expectedHabit),
       ),
