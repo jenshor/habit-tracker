@@ -18,7 +18,7 @@ class HabitTemplateInfo extends StatelessWidget {
         child: Row(
           children: [
             Checkmark(
-              isCompleted: false,
+              isCompleted: true,
             ),
             SpacerBox.size24(),
             Column(
