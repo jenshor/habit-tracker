@@ -61,9 +61,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
 
   Stream<HabitState> _mapHabitTemplateLoadedToState(HabitsLoaded event) async* {
     if (event.habits.isEmpty) {
-      event.habits.add(
-        createDefaultHabit(),
-      );
+      Habit habit = createDefaultHabit();
+      await repository.addItem(habit);
     }
 
     yield HabitState.loaded(

@@ -5,7 +5,7 @@ import 'package:habit_tracker/blocs/habit_template_bloc/habit_template_bloc.dart
 import 'package:habit_tracker/models/user.dart';
 import 'package:habit_tracker/pages/add_habit_template_page.dart';
 import 'package:habit_tracker/repositories/habit_template_repository.dart';
-import 'package:habit_tracker/widgets/habit_templates.dart';
+import 'package:habit_tracker/widgets/habit_info.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
 
 class StartPage extends StatefulWidget {

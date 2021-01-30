@@ -8,10 +8,7 @@ class HabitRepository extends FirestoreRepository<Habit> {
     String userId,
     String habitTemplateId,
   ) : super(
-          FirestoreHelper.getCollectionPath([
-            'habits',
-            habitTemplateId,
-          ]),
+          'habits-$habitTemplateId',
           (Map<String, dynamic> map) => Habit.fromMap(map),
           collectionParentPath: FirestoreHelper.getCollectionPath([
             UserRepository.name,

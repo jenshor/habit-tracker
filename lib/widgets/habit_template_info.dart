@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/models/habit_template.dart';
 import 'package:habit_tracker/widgets/checkmark.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
 
-class HabitTemplateInfo extends StatelessWidget {
+class HabitInfo extends StatelessWidget {
   final HabitTemplate habitTemplate;
-
-  const HabitTemplateInfo({Key key, this.habitTemplate}) : super(key: key);
+  final Habit habit;
+  const HabitInfo({
+    Key key,
+    @required this.habitTemplate,
+    @required this.habit,
+  }) : super(
+          key: key,
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,7 @@ class HabitTemplateInfo extends StatelessWidget {
         child: Row(
           children: [
             Checkmark(
-              isCompleted: true,
+              habit: habit,
             ),
             SpacerBox.size24(),
             Column(
