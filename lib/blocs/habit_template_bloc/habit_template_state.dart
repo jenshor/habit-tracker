@@ -1,11 +1,5 @@
 part of 'habit_template_bloc.dart';
 
-enum LoadingStatus {
-  uninitialized,
-  loading,
-  loaded,
-}
-
 class HabitTemplateState extends Equatable {
   final LoadingStatus status;
   final HashMap<String, HabitTemplate> habitTemplates;

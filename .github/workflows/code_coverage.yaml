@@ -10,8 +10,8 @@ jobs:
       - uses: actions/checkout@master
       - uses: subosito/flutter-action@master
         with:
-         flutter-version: '1.22.5'
-         channel: 'stable'
+         flutter-version: '1.26.x'
+         channel: 'dev'
       - run: flutter pub get
       - run: flutter test --coverage
       - name: Coveralls
