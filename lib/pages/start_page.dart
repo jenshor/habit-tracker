@@ -7,7 +7,7 @@ import 'package:habit_tracker/models/user.dart';
 import 'package:habit_tracker/pages/modify_habit_page.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
 import 'package:habit_tracker/widgets/custom_scaffold.dart';
-import 'package:habit_tracker/widgets/habit_info.dart';
+import 'package:habit_tracker/widgets/habits_list.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
 import 'package:habit_tracker/widgets/rounded_button.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
@@ -73,7 +73,7 @@ class _StartPageState extends State<StartPage> {
                 ],
               ),
               SpacerBox.size16(),
-              HabitTemplates(
+              HabitsList(
                 user: user,
               ),
             ],
