@@ -36,6 +36,7 @@ dependencies:
   formz: ^0.3.2
   google_fonts: ^1.1.2
   google_sign_in: ^4.5.9
+  intl: ^0.16.1
   pedantic: ^1.9.2
 
 dev_dependencies:

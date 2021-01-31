@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
 import 'package:habit_tracker/models/habit.dart';
+import 'package:habit_tracker/pages/habit_detail_page.dart';
 import 'package:habit_tracker/widgets/checkmark.dart';
+import 'package:habit_tracker/widgets/custom_card.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
 
 class HabitInfo extends StatelessWidget {
@@ -14,15 +18,28 @@ class HabitInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24), color: Colors.white),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (c) => BlocProvider.value(
+                child: HabitDetailPage(
+                  habitId: habit.id.value,
+                ),
+                value: BlocProvider.of<HabitBloc>(context)),
+          ),
+        );
+      },
+      child: CustomCard(
         child: Row(
           children: [
             Checkmark(
               habit: habit,
+              onPressed: () {
+                BlocProvider.of<HabitBloc>(context).add(
+                    HabitCompletionToggled(habit: habit, date: DateTime.now()));
+              },
             ),
             SpacerBox.size24(),
             Column(

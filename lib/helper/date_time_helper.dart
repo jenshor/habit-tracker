@@ -16,4 +16,14 @@ class DateTimeHelper {
 
     return time != null;
   }
+
+  bool isCompletedOnDay(Habit habit, DateTime date) {
+    DateTime day = dateTimeProvider.getDayWithoutTime(date);
+    DateTime time = habit.completionTimes.firstWhere(
+      (DateTime date) => date.isAtSameMomentAs(day),
+      orElse: () => null,
+    );
+
+    return time != null;
+  }
 }

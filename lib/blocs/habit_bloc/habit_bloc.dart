@@ -10,6 +10,7 @@ import 'package:habit_tracker/helper/hash_map_helper.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/models/id.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
+import 'package:intl/date_time_patterns.dart';
 import 'package:meta/meta.dart';
 part 'habit_event.dart';
 part 'habit_state.dart';
@@ -92,14 +93,16 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
   }
 
   // TODO make a global function from this
-  Habit toggleHabitCompletion(Habit habit) {
-    DateTime today = dateTimeProvider.getCurrentDay();
+  Habit toggleHabitCompletion(
+    Habit habit,
+    DateTime date,
+  ) {
     List<DateTime> completionTimes = List<DateTime>.from(habit.completionTimes);
-
+    date = dateTimeProvider.getDayWithoutTime(date);
     if (dateTimeHelper.isCompletedToday(habit)) {
-      completionTimes.remove(today);
+      completionTimes.remove(date);
     } else {
-      completionTimes.add(today);
+      completionTimes.add(date);
     }
     Habit updatedHabit = habit.copyWith(completionTimes: completionTimes);
     return updatedHabit;
@@ -107,7 +110,10 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
 
   Stream<HabitState> _mapHabitCompletionToggledToState(
       HabitCompletionToggled event) async* {
-    Habit habit = toggleHabitCompletion(event.habit);
+    Habit habit = toggleHabitCompletion(
+      event.habit,
+      event.date,
+    );
     await repository.updateItem(habit);
   }
 }

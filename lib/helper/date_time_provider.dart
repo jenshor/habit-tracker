@@ -4,11 +4,14 @@ class DateTimeProvider {
   }
 
   DateTime getCurrentDay() {
-    DateTime currentTime = getCurrentTime();
+    return getDayWithoutTime(getCurrentTime());
+  }
+
+  DateTime getDayWithoutTime(DateTime dateTime) {
     return DateTime(
-      currentTime.year,
-      currentTime.month,
-      currentTime.day,
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
     );
   }
 }

@@ -205,7 +205,10 @@ void testCompletionToggled() {
     act: (HabitBloc bloc) => bloc
       ..add(HabitsLoading())
       ..add(
-        HabitCompletionToggled(habit: habit),
+        HabitCompletionToggled(
+          habit: habit,
+          date: dateTimeProvider.getCurrentDay(),
+        ),
       ),
     expect: [
       HabitState.loading(),

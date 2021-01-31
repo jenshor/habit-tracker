@@ -36,8 +36,11 @@ class HabitChanged extends HabitEvent {
 
 class HabitCompletionToggled extends HabitEvent {
   final Habit habit;
+  final DateTime date;
+
   HabitCompletionToggled({
-    this.habit,
+    @required this.habit,
+    @required this.date,
   });
 
   @override
