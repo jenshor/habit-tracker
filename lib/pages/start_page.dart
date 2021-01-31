@@ -5,6 +5,7 @@ import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
 import 'package:habit_tracker/models/user.dart';
 import 'package:habit_tracker/pages/add_habit_page.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
+import 'package:habit_tracker/widgets/custom_scaffold.dart';
 import 'package:habit_tracker/widgets/habit_info.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
 
@@ -20,12 +21,10 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
-      return Scaffold(
-        body: SafeArea(
-          child: state.status == AuthenticationStatus.authenticated
-              ? _app(state.user)
-              : LoginSignup(),
-        ),
+      return CustomScaffold(
+        child: state.status == AuthenticationStatus.authenticated
+            ? _app(state.user)
+            : LoginSignup(),
       );
     });
   }
@@ -58,7 +57,10 @@ class _StartPageState extends State<StartPage> {
             children: [
               Row(
                 children: [
-                  Text('Habits'),
+                  Text(
+                    'Habits',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
                   _addHabitButton(buildContext),
                 ],
               ),

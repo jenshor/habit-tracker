@@ -20,22 +20,20 @@ class HabitTemplates extends StatefulWidget {
 class _HabitTemplatesState extends State<HabitTemplates> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: BlocBuilder<HabitBloc, HabitState>(builder: (context, state) {
-          List<Habit> items = state.habits.values.toList();
-          return ListView.separated(
-            shrinkWrap: true,
-            itemCount: items.length,
-            separatorBuilder: (context, index) {
-              return SpacerBox.size12();
-            },
-            itemBuilder: (context, index) {
-              return HabitInfo(
-                habit: items[index],
-              );
-            },
+    return BlocBuilder<HabitBloc, HabitState>(builder: (context, state) {
+      List<Habit> items = state.habits.values.toList();
+      return ListView.separated(
+        shrinkWrap: true,
+        itemCount: items.length,
+        separatorBuilder: (context, index) {
+          return SpacerBox.size12();
+        },
+        itemBuilder: (context, index) {
+          return HabitInfo(
+            habit: items[index],
           );
-        }));
+        },
+      );
+    });
   }
 }
