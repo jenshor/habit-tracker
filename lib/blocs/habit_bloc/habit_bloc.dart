@@ -43,7 +43,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       yield* _mapHabitDeletedToState(event);
     }
     if (event is HabitsLoading) {
-      yield* _mapHabitTemplateLoadingToState();
+      yield* _mapHabitLoadingToState();
     }
     if (event is HabitsLoaded) {
       yield* _mapHabitLoadedToState(event);
@@ -65,7 +65,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     await repository.deleteItem(event.habit);
   }
 
-  Stream<HabitState> _mapHabitTemplateLoadingToState() async* {
+  Stream<HabitState> _mapHabitLoadingToState() async* {
     repository.getStreamOfItems().forEach(
           (List<Habit> habitTemplates) => add(
             HabitsLoaded(habitTemplates),

@@ -19,8 +19,9 @@ class Habit extends Model {
     this.name,
     this.unit,
     this.volume,
-    this.completionTimes,
-  }) : super(id: id);
+    List<DateTime> completionTimes,
+  })  : this.completionTimes = completionTimes ?? <DateTime>[],
+        super(id: id);
 
   Habit.fromDate({
     @required String name,

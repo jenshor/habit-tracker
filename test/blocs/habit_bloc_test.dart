@@ -17,18 +17,12 @@ final String defaultTemplateName = 'Test Habit';
 
 main() {
   group('HabitBloc', () {
-    // TODO see HabitTemplateBlocTest for details about this methods
-    // test is required, however the code is similar to that in HabitTemplateBlocTest
-    testDefaultHabitLoaded();
-    // testAddTemplate();
-    // testDeleteTemplate();
-    // testChangeTemplate();
-
+    testHabitLoaded();
     testCompletionToggled();
   });
 }
 
-void testDefaultHabitLoaded() {
+void testHabitLoaded() {
   DateTime date = DateTime.now();
   Habit habit = Habit(
     id: Id.fromDate(
@@ -42,10 +36,10 @@ void testDefaultHabitLoaded() {
     repository: MockHabitRepository(),
   );
   mockHelper.setupGetStreamOfItems();
-  mockHelper.addItemsToStream([]);
+  mockHelper.addItemToStream(habit);
 
   blocTest(
-    'emits [default Habit] when HabitsLoading is called.',
+    'emits [Habit] when HabitsLoading is called.',
     build: () => HabitBloc(
       repository: mockHelper.repository,
       dateTimeProvider: dateTimeProvider,
@@ -63,10 +57,10 @@ void testDefaultHabitLoaded() {
 void testCompletionToggled() {
   DateTime changedDate = DateTime.now();
   Habit habit = Habit(name: defaultTemplateName, id: defaultId);
-  Habit expectedHabit = habit.copyWith(completionTime: changedDate);
+  Habit expectedHabit = habit.copyWith(completionTimes: [changedDate]);
 
   DateTimeProvider dateTimeProvider = DateTimeProviderMock();
-  when(dateTimeProvider.getCurrentTime()).thenReturn(changedDate);
+  when(dateTimeProvider.getCurrentDay()).thenReturn(changedDate);
   RepositoryMockHelper<Habit> mockHelper = RepositoryMockHelper<Habit>(
     repository: MockHabitRepository(),
   );
