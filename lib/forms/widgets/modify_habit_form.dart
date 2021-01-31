@@ -81,14 +81,29 @@ class AcceptButton extends StatelessWidget {
   }
 }
 
-class _HabitNameInput extends StatelessWidget {
+class _HabitNameInput extends StatefulWidget {
   const _HabitNameInput({Key key}) : super(key: key);
+
+  @override
+  __HabitNameInputState createState() => __HabitNameInputState();
+}
+
+class __HabitNameInputState extends State<_HabitNameInput> {
+  TextEditingController controller;
+
+  @override
+  void initState() {
+    controller = TextEditingController(
+        text: BlocProvider.of<ModifyHabitCubit>(context).state.name.value);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ModifyHabitCubit, ModifyHabitState>(
       builder: (context, state) {
         return TextField(
+          controller: controller,
           onChanged: (name) =>
               context.read<ModifyHabitCubit>().nameChanged(name),
           keyboardType: TextInputType.text,
