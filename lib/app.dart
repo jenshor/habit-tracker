@@ -9,7 +9,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           scaffoldBackgroundColor: Color(0xFFF2F1F5),
-          textTheme: GoogleFonts.montserratTextTheme()),
+          textTheme: GoogleFonts.montserratTextTheme().apply(
+              bodyColor: Colors.black,
+              decorationColor: Colors.black,
+              displayColor: Colors.black)),
       title: 'Counter App',
       home: StartPage(),
     );

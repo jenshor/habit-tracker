@@ -59,7 +59,7 @@ class _StartPageState extends State<StartPage> {
                 children: [
                   Text(
                     'Habits',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headline3,
                   ),
                   _addHabitButton(buildContext),
                 ],
