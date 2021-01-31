@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
 import 'package:habit_tracker/models/user.dart';
@@ -8,6 +9,8 @@ import 'package:habit_tracker/repositories/habit_repository.dart';
 import 'package:habit_tracker/widgets/custom_scaffold.dart';
 import 'package:habit_tracker/widgets/habit_info.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
+import 'package:habit_tracker/widgets/rounded_button.dart';
+import 'package:habit_tracker/widgets/spacer_box.dart';
 
 class StartPage extends StatefulWidget {
   StartPage({Key key}) : super(key: key);
@@ -29,9 +32,13 @@ class _StartPageState extends State<StartPage> {
     });
   }
 
-  IconButton _addHabitButton(BuildContext context) {
-    return IconButton(
-        icon: Icon(Icons.add),
+  Widget _addHabitButton(BuildContext context) {
+    return RoundedButton(
+        text: 'add',
+        icon: Icon(
+          FontAwesomeIcons.plus,
+          size: 16,
+        ),
         onPressed: () {
           Navigator.push(
               context,
@@ -56,6 +63,7 @@ class _StartPageState extends State<StartPage> {
           builder: (buildContext) => Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Habits',
@@ -64,6 +72,7 @@ class _StartPageState extends State<StartPage> {
                   _addHabitButton(buildContext),
                 ],
               ),
+              SpacerBox.size16(),
               HabitTemplates(
                 user: user,
               ),
