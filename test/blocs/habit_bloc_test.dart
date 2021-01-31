@@ -11,13 +11,15 @@ import '../mocks/date_time_provider_mock.dart';
 import '../mocks/repository_mock_helper.dart';
 import '../mocks/repository_mocks.dart';
 
-// TODO this code is copied from HabitTemplateBlocTest
 final Id defaultId = Id('1');
-final String defaultTemplateName = 'Test Habit';
+final String defaultName = 'Test Habit';
 
 main() {
   group('HabitBloc', () {
     testHabitLoaded();
+    testHabitAdded();
+    testHabitDeleted();
+    testHabitChanged();
     testCompletionToggled();
   });
 }
@@ -54,9 +56,130 @@ void testHabitLoaded() {
   );
 }
 
+void testHabitAdded() {
+  DateTime date = DateTime.now();
+  Habit habit = Habit(
+    id: Id.fromDate(
+      date: date,
+    ),
+  );
+
+  DateTimeProvider dateTimeProvider = DateTimeProviderMock();
+  when(dateTimeProvider.getCurrentTime()).thenReturn(date);
+  RepositoryMockHelper<Habit> mockHelper = RepositoryMockHelper<Habit>(
+    repository: MockHabitRepository(),
+  );
+  mockHelper.setupAddItem(habit);
+  mockHelper.setupGetStreamOfItems();
+
+  blocTest(
+    'emits [Habit] when HabitAdded is called.',
+    build: () => HabitBloc(
+      repository: mockHelper.repository,
+      dateTimeProvider: dateTimeProvider,
+      state: HabitState.loaded(
+        HashMapHelper.createMapFromItem(habit),
+      ),
+    ),
+    act: (HabitBloc bloc) => bloc
+      ..add(HabitsLoading())
+      ..add(
+        HabitAdded(habit),
+      ),
+    expect: [
+      HabitState.loading(),
+      HabitState.loaded(
+        HashMapHelper.createMapFromItem(habit),
+      ),
+    ],
+  );
+}
+
+void testHabitDeleted() {
+  DateTime date = DateTime.now();
+  Habit habit = Habit(
+    id: defaultId,
+  );
+
+  DateTimeProvider dateTimeProvider = DateTimeProviderMock();
+  when(dateTimeProvider.getCurrentTime()).thenReturn(date);
+  RepositoryMockHelper<Habit> mockHelper = RepositoryMockHelper<Habit>(
+    repository: MockHabitRepository(),
+  );
+  mockHelper.setupDeleteItem(
+    habit,
+    itemsReturnedByStream: [],
+  );
+  mockHelper.setupGetStreamOfItems();
+
+  blocTest(
+    'emits [] when HabitDeleted is called.',
+    build: () => HabitBloc(
+      repository: mockHelper.repository,
+      dateTimeProvider: dateTimeProvider,
+      state: HabitState.loaded(
+        HashMapHelper.createMapFromItem(habit),
+      ),
+    ),
+    act: (HabitBloc bloc) => bloc
+      ..add(HabitsLoading())
+      ..add(
+        HabitDeleted(habit),
+      ),
+    expect: [
+      HabitState.loading(),
+      HabitState.loaded(
+        HashMapHelper.createMapFromItems([]),
+      ),
+    ],
+  );
+}
+
+void testHabitChanged() {
+  DateTime date = DateTime.now();
+  Habit habit = Habit(id: defaultId, name: defaultName);
+  Habit changedHabit = habit.copyWith(name: '$defaultName new');
+
+  DateTimeProvider dateTimeProvider = DateTimeProviderMock();
+  when(dateTimeProvider.getCurrentTime()).thenReturn(date);
+  RepositoryMockHelper<Habit> mockHelper = RepositoryMockHelper<Habit>(
+    repository: MockHabitRepository(),
+  );
+  mockHelper.setupDeleteItem(
+    habit,
+    itemsReturnedByStream: [],
+  );
+  mockHelper.setupGetStreamOfItems();
+  mockHelper.setupUpdateItem(
+    changedHabit,
+  );
+
+  blocTest(
+    'emits [] when HabitChanged is called.',
+    build: () => HabitBloc(
+      repository: mockHelper.repository,
+      dateTimeProvider: dateTimeProvider,
+      state: HabitState.loaded(
+        HashMapHelper.createMapFromItem(habit),
+      ),
+    ),
+    act: (HabitBloc bloc) => bloc
+      ..add(HabitsLoading())
+      ..add(
+        HabitChanged(changedHabit),
+      ),
+    expect: [
+      HabitState.loading(),
+      HabitState.loaded(
+        HashMapHelper.createMapFromItem(changedHabit),
+      ),
+    ],
+  );
+}
+
 void testCompletionToggled() {
   DateTime changedDate = DateTime.now();
-  Habit habit = Habit(name: defaultTemplateName, id: defaultId);
+  Habit habit = Habit(name: defaultName, id: defaultId);
   Habit expectedHabit = habit.copyWith(completionTimes: [changedDate]);
 
   DateTimeProvider dateTimeProvider = DateTimeProviderMock();
