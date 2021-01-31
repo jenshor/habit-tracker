@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/models/habit.dart';
-import 'package:habit_tracker/models/habit_template.dart';
 import 'package:habit_tracker/widgets/checkmark.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
 
 class HabitInfo extends StatelessWidget {
-  final HabitTemplate habitTemplate;
   final Habit habit;
   const HabitInfo({
     Key key,
-    @required this.habitTemplate,
     @required this.habit,
   }) : super(
           key: key,
@@ -31,7 +28,7 @@ class HabitInfo extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  habitTemplate.name,
+                  habit.name,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,

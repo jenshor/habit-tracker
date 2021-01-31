@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:habit_tracker/blocs/loading_status.dart';
+import 'package:habit_tracker/helper/date_time_helper.dart';
 import 'package:habit_tracker/helper/date_time_provider.dart';
 import 'package:habit_tracker/helper/hash_map_helper.dart';
 import 'package:habit_tracker/models/habit.dart';
@@ -18,27 +19,50 @@ part 'habit_state.dart';
 class HabitBloc extends Bloc<HabitEvent, HabitState> {
   HabitRepository repository;
   DateTimeProvider dateTimeProvider;
-
+  DateTimeHelper dateTimeHelper;
   HabitBloc({
     @required this.repository,
     HabitState state,
     DateTimeProvider dateTimeProvider,
   })  : this.dateTimeProvider = dateTimeProvider ?? DateTimeProvider(),
+        this.dateTimeHelper = DateTimeHelper(
+            dateTimeProvider: dateTimeProvider ?? DateTimeProvider()),
         super(state ?? HabitState.uninitialized());
 
   @override
   Stream<HabitState> mapEventToState(
     HabitEvent event,
   ) async* {
+    if (event is HabitAdded) {
+      yield* _mapHabitAddedToState(event);
+    }
+    if (event is HabitChanged) {
+      yield* _mapHabitChangedToState(event);
+    }
+    if (event is HabitDeleted) {
+      yield* _mapHabitDeletedToState(event);
+    }
     if (event is HabitsLoading) {
       yield* _mapHabitTemplateLoadingToState();
     }
     if (event is HabitsLoaded) {
-      yield* _mapHabitTemplateLoadedToState(event);
+      yield* _mapHabitLoadedToState(event);
     }
     if (event is HabitCompletionToggled) {
       yield* _mapHabitCompletionToggledToState(event);
     }
+  }
+
+  Stream<HabitState> _mapHabitAddedToState(HabitAdded event) async* {
+    await repository.addItem(event.habit);
+  }
+
+  Stream<HabitState> _mapHabitChangedToState(HabitChanged event) async* {
+    await repository.updateItem(event.habit);
+  }
+
+  Stream<HabitState> _mapHabitDeletedToState(HabitDeleted event) async* {
+    await repository.deleteItem(event.habit);
   }
 
   Stream<HabitState> _mapHabitTemplateLoadingToState() async* {
@@ -54,17 +78,12 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
   Habit createDefaultHabit() {
     return Habit(
       id: Id.fromDate(
-        date: dateTimeProvider.getCurrentTime(),
+        date: dateTimeProvider.getCurrentDay(),
       ),
     );
   }
 
-  Stream<HabitState> _mapHabitTemplateLoadedToState(HabitsLoaded event) async* {
-    if (event.habits.isEmpty) {
-      Habit habit = createDefaultHabit();
-      await repository.addItem(habit);
-    }
-
+  Stream<HabitState> _mapHabitLoadedToState(HabitsLoaded event) async* {
     yield HabitState.loaded(
       HashMapHelper.createMapFromItems(
         event.habits,
@@ -72,18 +91,18 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     );
   }
 
+  // TODO make a global function from this
   Habit toggleHabitCompletion(Habit habit) {
-    if (habit.isCompleted) {
-      habit = habit.copyWith(
-        completionTime: null,
-      );
-    } else {
-      habit = habit.copyWith(
-        completionTime: dateTimeProvider.getCurrentTime(),
-      );
-    }
+    DateTime today = dateTimeProvider.getCurrentDay();
+    List<DateTime> completionTimes = List<DateTime>.from(habit.completionTimes);
 
-    return habit;
+    if (dateTimeHelper.isCompletedToday(habit)) {
+      completionTimes.remove(today);
+    } else {
+      completionTimes.add(today);
+    }
+    Habit updatedHabit = habit.copyWith(completionTimes: completionTimes);
+    return updatedHabit;
   }
 
   Stream<HabitState> _mapHabitCompletionToggledToState(

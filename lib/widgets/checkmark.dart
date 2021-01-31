@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
 import 'package:habit_tracker/constants/colors.dart';
+import 'package:habit_tracker/helper/date_time_helper.dart';
 import 'package:habit_tracker/models/habit.dart';
 
 class Checkmark extends StatelessWidget {
@@ -31,7 +32,7 @@ class Checkmark extends StatelessWidget {
   Color _backgroundColor() {
     Color color = ConstantColors.gray;
 
-    if (habit != null && habit.isCompleted) {
+    if (DateTimeHelper().isCompletedToday(habit)) {
       color = ConstantColors.green;
     }
 

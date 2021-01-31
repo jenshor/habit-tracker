@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:habit_tracker/blocs/habit_template_bloc/habit_template_bloc.dart';
-import 'package:habit_tracker/models/habit_template.dart';
+import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
+import 'package:habit_tracker/models/habit.dart';
 
-class AddHabitTemplatePage extends StatefulWidget {
+class AddHabitPage extends StatefulWidget {
   @override
-  _AddHabitTemplatePageState createState() => _AddHabitTemplatePageState();
+  _AddHabitPageState createState() => _AddHabitPageState();
 }
 
-class _AddHabitTemplatePageState extends State<AddHabitTemplatePage> {
+class _AddHabitPageState extends State<AddHabitPage> {
   TextEditingController nameController = TextEditingController();
 
   @override
@@ -17,7 +17,7 @@ class _AddHabitTemplatePageState extends State<AddHabitTemplatePage> {
       appBar: AppBar(
         title: Text('Add a Habit'),
       ),
-      body: BlocBuilder<HabitTemplateBloc, HabitTemplateState>(
+      body: BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {
           return Column(
             children: [
@@ -26,9 +26,11 @@ class _AddHabitTemplatePageState extends State<AddHabitTemplatePage> {
               ),
               RaisedButton(
                 onPressed: () {
-                  BlocProvider.of<HabitTemplateBloc>(context).add(
-                      HabitTemplateAdded(
-                          HabitTemplate(name: nameController.text)));
+                  BlocProvider.of<HabitBloc>(context)
+                      .add(HabitAdded(Habit.fromDate(
+                    name: nameController.text,
+                    date: DateTime.now(),
+                  )));
                 },
                 child: Text('Add habit'),
               )
