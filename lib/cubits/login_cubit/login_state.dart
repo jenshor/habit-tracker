@@ -27,10 +27,5 @@ class LoginState extends Equatable {
   }
 
   @override
-  String toString() {
-    return """LoginState {
-      email: $email,
-      password: $password,
-      status: $status""";
-  }
+  bool get stringify => true;
 }

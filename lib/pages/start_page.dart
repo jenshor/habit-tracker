@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
 import 'package:habit_tracker/models/user.dart';
-import 'package:habit_tracker/pages/add_habit_page.dart';
+import 'package:habit_tracker/pages/modify_habit_page.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
 import 'package:habit_tracker/widgets/custom_scaffold.dart';
 import 'package:habit_tracker/widgets/habit_info.dart';
@@ -45,7 +45,7 @@ class _StartPageState extends State<StartPage> {
               MaterialPageRoute(
                 builder: (c) => BlocProvider.value(
                     value: BlocProvider.of<HabitBloc>(context),
-                    child: AddHabitPage()),
+                    child: ModifyHabitPage()),
               ));
         });
   }
