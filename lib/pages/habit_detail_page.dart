@@ -6,6 +6,7 @@ import 'package:habit_tracker/widgets/custom_card.dart';
 import 'package:habit_tracker/widgets/custom_scaffold.dart';
 import 'package:habit_tracker/widgets/daily_habit.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
+import 'package:habit_tracker/widgets/streak_card.dart';
 
 class HabitDetailPage extends StatelessWidget {
   final String habitId;
@@ -31,6 +32,10 @@ class HabitDetailPage extends StatelessWidget {
                     ),
                     SpacerBox.size16(),
                     _multiDayOverview(habit),
+                    SpacerBox.size16(),
+                    StreakCard(
+                      streak: habit.streak,
+                    ),
                     SpacerBox.size16(),
                     _deleteButton(context, habit),
                   ],
