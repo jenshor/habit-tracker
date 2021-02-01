@@ -21,13 +21,16 @@ class StreakProvider {
     int streak = 0;
     while (!hasStreakEnded && dates.isNotEmpty) {
       DateTime nextDate = dates.removeFirst();
+      Duration difference = currentDate.difference(nextDate);
       if (today == nextDate) {
         streak++;
-      } else if (currentDate == nextDate.add(Duration(days: 1))) {
+      } else if (difference == Duration(days: 1)) {
         streak++;
       } else {
         hasStreakEnded = true;
       }
+
+      currentDate = nextDate;
     }
 
     return streak;
