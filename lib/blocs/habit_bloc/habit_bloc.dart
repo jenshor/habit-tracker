@@ -99,7 +99,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
   ) {
     List<DateTime> completionTimes = List<DateTime>.from(habit.completionTimes);
     date = dateTimeProvider.getDayWithoutTime(date);
-    if (dateTimeHelper.isCompletedToday(habit)) {
+    if (dateTimeHelper.isDateInList(completionTimes, date)) {
       completionTimes.remove(date);
     } else {
       completionTimes.add(date);

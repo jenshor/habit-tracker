@@ -26,4 +26,18 @@ class DateTimeHelper {
 
     return time != null;
   }
+
+  bool isDateInList(
+    List<DateTime> list,
+    DateTime date,
+  ) {
+    for (DateTime dateItem in list) {
+      if (dateItem.day == date.day &&
+          dateItem.month == date.month &&
+          dateItem.year == date.year) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
