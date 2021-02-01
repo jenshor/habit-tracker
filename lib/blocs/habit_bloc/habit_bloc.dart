@@ -7,6 +7,7 @@ import 'package:habit_tracker/blocs/loading_status.dart';
 import 'package:habit_tracker/helper/date_time_helper.dart';
 import 'package:habit_tracker/helper/date_time_provider.dart';
 import 'package:habit_tracker/helper/hash_map_helper.dart';
+import 'package:habit_tracker/helper/streak_provider.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/models/id.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
@@ -84,10 +85,19 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     );
   }
 
+  Habit setPropertiesOfHabit(Habit habit) {
+    int streak = StreakProvider().getStreak(habit);
+    return habit.copyWith(streak: streak);
+  }
+
+  List<Habit> getHabitsFromHabitsLoadedEvent(HabitsLoaded event) {
+    return event.habits.map((e) => setPropertiesOfHabit(e)).toList();
+  }
+
   Stream<HabitState> _mapHabitLoadedToState(HabitsLoaded event) async* {
     yield HabitState.loaded(
       HashMapHelper.createMapFromItems(
-        event.habits,
+        getHabitsFromHabitsLoadedEvent(event),
       ),
     );
   }

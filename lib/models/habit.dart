@@ -43,6 +43,7 @@ class Habit extends Model {
     String name,
     Unit unit,
     Volume volume,
+    int streak,
     List<DateTime> completionTimes,
   }) {
     return Habit(
@@ -50,6 +51,7 @@ class Habit extends Model {
       name: name ?? this.name,
       unit: unit ?? this.unit,
       volume: volume ?? this.volume,
+      streak: streak ?? this.streak,
       completionTimes: completionTimes ?? this.completionTimes,
     );
   }
