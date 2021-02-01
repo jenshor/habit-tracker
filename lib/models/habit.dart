@@ -12,13 +12,16 @@ class Habit extends Model {
   final String name;
   final Unit unit;
   final Volume volume;
+  // TODO rename this to completionDates
   final List<DateTime> completionTimes;
+  final int streak;
 
   Habit({
     @required Id id,
     this.name,
     this.unit,
     this.volume,
+    this.streak = 0,
     List<DateTime> completionTimes,
   })  : this.completionTimes = completionTimes ?? <DateTime>[],
         super(id: id);
