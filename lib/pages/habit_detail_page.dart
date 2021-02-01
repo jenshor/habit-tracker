@@ -21,30 +21,49 @@ class HabitDetailPage extends StatelessWidget {
       builder: (context, state) {
         Habit habit = state.habits[habitId];
         return CustomScaffold(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                habit.name,
-                style: Theme.of(context).textTheme.headline3,
-              ),
-              SpacerBox.size16(),
-              CustomCard(
-                  padding: 24,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: dates()
-                        .map((DateTime date) => DailyHabit(
-                              habit: habit,
-                              date: date,
-                            ))
-                        .toList(),
-                  ))
-            ],
-          ),
+          child: habit != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      habit.name,
+                      style: Theme.of(context).textTheme.headline3,
+                    ),
+                    SpacerBox.size16(),
+                    _multiDayOverview(habit),
+                    SpacerBox.size16(),
+                    _deleteButton(context, habit),
+                  ],
+                )
+              : Container(),
         );
       },
     );
+  }
+
+  Widget _deleteButton(BuildContext context, Habit habit) {
+    return Center(
+      child: FlatButton(
+          onPressed: () {
+            Navigator.pop(context);
+            BlocProvider.of<HabitBloc>(context).add(HabitDeleted(habit));
+          },
+          child: Text('delete this habit'.toUpperCase())),
+    );
+  }
+
+  Widget _multiDayOverview(Habit habit) {
+    return CustomCard(
+        padding: 24,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: dates()
+              .map((DateTime date) => DailyHabit(
+                    habit: habit,
+                    date: date,
+                  ))
+              .toList(),
+        ));
   }
 
   List<DateTime> dates() {
