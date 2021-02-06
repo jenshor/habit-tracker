@@ -11,6 +11,8 @@ class User extends Model {
   final String lastName;
   final String email;
 
+  String get fullName => '$firstName $lastName';
+
   User({
     @required Id id,
     this.firstName,

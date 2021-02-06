@@ -51,6 +51,8 @@ void testHabitLoaded() {
       HabitState.loading(),
       HabitState.loaded(
         HashMapHelper.createMapFromItem(habit),
+        1,
+        1,
       ),
     ],
   );
@@ -79,6 +81,8 @@ void testHabitAdded() {
       dateTimeProvider: dateTimeProvider,
       state: HabitState.loaded(
         HashMapHelper.createMapFromItem(habit),
+        1,
+        1,
       ),
     ),
     act: (HabitBloc bloc) => bloc
@@ -90,6 +94,8 @@ void testHabitAdded() {
       HabitState.loading(),
       HabitState.loaded(
         HashMapHelper.createMapFromItem(habit),
+        1,
+        1,
       ),
     ],
   );
@@ -119,6 +125,8 @@ void testHabitDeleted() {
       dateTimeProvider: dateTimeProvider,
       state: HabitState.loaded(
         HashMapHelper.createMapFromItem(habit),
+        1,
+        1,
       ),
     ),
     act: (HabitBloc bloc) => bloc
@@ -130,6 +138,8 @@ void testHabitDeleted() {
       HabitState.loading(),
       HabitState.loaded(
         HashMapHelper.createMapFromItems([]),
+        0,
+        0,
       ),
     ],
   );
@@ -161,6 +171,8 @@ void testHabitChanged() {
       dateTimeProvider: dateTimeProvider,
       state: HabitState.loaded(
         HashMapHelper.createMapFromItem(habit),
+        1,
+        1,
       ),
     ),
     act: (HabitBloc bloc) => bloc
@@ -172,6 +184,8 @@ void testHabitChanged() {
       HabitState.loading(),
       HabitState.loaded(
         HashMapHelper.createMapFromItem(changedHabit),
+        1,
+        1,
       ),
     ],
   );
@@ -200,6 +214,8 @@ void testCompletionToggled() {
       dateTimeProvider: dateTimeProvider,
       state: HabitState.loaded(
         HashMapHelper.createMapFromItem(habit),
+        1,
+        1,
       ),
     ),
     act: (HabitBloc bloc) => bloc
@@ -214,6 +230,8 @@ void testCompletionToggled() {
       HabitState.loading(),
       HabitState.loaded(
         HashMapHelper.createMapFromItem(expectedHabit),
+        1,
+        1,
       ),
     ],
   );

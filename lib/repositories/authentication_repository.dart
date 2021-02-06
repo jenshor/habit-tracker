@@ -22,8 +22,12 @@ class AuthenticationRepository {
 
   Stream<model.User> getUsers() {
     return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
-      model.User user = await _userRepository.getItem(firebaseUser.uid);
-      return user;
+      if (firebaseUser != null) {
+        model.User user = await _userRepository.getItem(firebaseUser.uid);
+        return user;
+      } else {
+        return null;
+      }
     });
   }
 

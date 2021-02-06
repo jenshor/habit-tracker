@@ -6,6 +6,7 @@ import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
 import 'package:habit_tracker/models/user.dart';
 import 'package:habit_tracker/pages/modify_habit_page.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
+import 'package:habit_tracker/widgets/custom_navigation.dart';
 import 'package:habit_tracker/widgets/custom_scaffold.dart';
 import 'package:habit_tracker/widgets/habits_list.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
@@ -24,62 +25,7 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
-      return CustomScaffold(
-        child: state.status == AuthenticationStatus.authenticated
-            ? _app(state.user)
-            : LoginSignup(),
-      );
+      return CustomNavigation();
     });
-  }
-
-  Widget _addHabitButton(BuildContext context) {
-    return RoundedButton(
-        text: 'add',
-        icon: Icon(
-          FontAwesomeIcons.plus,
-          size: 16,
-        ),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (c) => BlocProvider.value(
-                    value: BlocProvider.of<HabitBloc>(context),
-                    child: ModifyHabitPage()),
-              ));
-        });
-  }
-
-  Widget _app(User user) {
-    return RepositoryProvider(
-      create: (context) => HabitRepository(user.id.value),
-      child: BlocProvider(
-        create: (context) => HabitBloc(
-          repository: RepositoryProvider.of<HabitRepository>(context),
-        )..add(
-            HabitsLoading(),
-          ),
-        child: Builder(
-          builder: (buildContext) => Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Habits',
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                  _addHabitButton(buildContext),
-                ],
-              ),
-              SpacerBox.size16(),
-              HabitsList(
-                user: user,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

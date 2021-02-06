@@ -11,7 +11,6 @@ import 'package:habit_tracker/helper/streak_provider.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/models/id.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
-import 'package:intl/date_time_patterns.dart';
 import 'package:meta/meta.dart';
 part 'habit_event.dart';
 part 'habit_state.dart';
@@ -94,11 +93,21 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     return event.habits.map((e) => setPropertiesOfHabit(e)).toList();
   }
 
+  int getTotalHabits(HabitsLoaded event) {
+    return event.habits.length;
+  }
+
+  int getUnfinishedHabits(HabitsLoaded event) {
+    return event.habits.length;
+  }
+
   Stream<HabitState> _mapHabitLoadedToState(HabitsLoaded event) async* {
     yield HabitState.loaded(
       HashMapHelper.createMapFromItems(
         getHabitsFromHabitsLoadedEvent(event),
       ),
+      getTotalHabits(event),
+      getUnfinishedHabits(event),
     );
   }
 
