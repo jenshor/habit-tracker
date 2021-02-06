@@ -1,12 +1,6 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:habit_tracker/widgets/overview.dart';
-import 'package:habit_tracker/widgets/habit_dashboard.dart';
-import 'package:habit_tracker/widgets/user_dashboard.dart';
 
 class CustomScaffold extends StatefulWidget {
   final Widget child;
