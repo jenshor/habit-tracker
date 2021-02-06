@@ -42,16 +42,15 @@ class HabitInfo extends StatelessWidget {
               },
             ),
             SpacerBox.size24(),
-            Column(
-              children: [
-                Text(
-                  habit.name,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
+            Flexible(
+              child: Text(
+                habit.name,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
+                overflow: TextOverflow.ellipsis,
+              ),
             )
           ],
         ),

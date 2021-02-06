@@ -7,21 +7,24 @@ import 'package:habit_tracker/models/model.dart';
 import 'id.dart';
 
 class User extends Model {
-  final String name;
+  final String firstName;
+  final String lastName;
   final String email;
 
   User({
     @required Id id,
-    this.name,
+    this.firstName,
+    this.lastName,
     this.email,
   }) : super(id: id);
 
   @override
-  List<Object> get props => [id, name, email];
+  List<Object> get props => [id, firstName, lastName, email];
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
+      'firstName': firstName,
+      'lastName': lastName,
       'email': email,
     };
   }
@@ -31,7 +34,8 @@ class User extends Model {
 
     return User(
       id: Id.fromMap(map['id']),
-      name: map['name'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
       email: map['email'],
     );
   }

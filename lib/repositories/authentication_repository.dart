@@ -1,33 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habit_tracker/exceptions/exceptions.dart';
-import 'package:habit_tracker/models/id.dart';
+import 'package:habit_tracker/repositories/user_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:habit_tracker/models/user.dart' as model;
 
 class AuthenticationRepository {
   AuthenticationRepository({
+    @required UserRepository userRepository,
     FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+  })  : assert(userRepository != null),
+        _userRepository = userRepository,
+        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+
+  final UserRepository _userRepository;
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
   Stream<model.User> getUsers() {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      return firebaseUser != null ? firebaseUser.toUser : null;
+    return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
+      model.User user = await _userRepository.getItem(firebaseUser.uid);
+      return user;
     });
   }
 
-  Future<void> signUp({
+  Future<UserCredential> signUp({
     @required String email,
     @required String password,
   }) async {
     assert(email != null && password != null);
     try {
-      await createUserWithEmailAndPassword(email, password);
+      return await createUserWithEmailAndPassword(email, password);
     } on Exception {
       throw SignUpFailure();
     }
@@ -96,17 +102,5 @@ class AuthenticationRepository {
       _firebaseAuth.signOut(),
       _googleSignIn.signOut(),
     ]);
-  }
-}
-
-extension on User {
-  model.User get toUser {
-    return model.User(
-      id: Id(uid),
-      email: email,
-      name: displayName,
-      // TODO think about implementing this later
-      // photo: photoURL,
-    );
   }
 }

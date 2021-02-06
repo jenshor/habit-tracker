@@ -47,8 +47,17 @@ class FirestoreRepository<Item extends Model> extends Repository<Item> {
     return document.id;
   }
 
-  DocumentReference getItem(Item item) {
+  DocumentReference getDocumentByItem(Item item) {
     return getDocument(item.id.value);
+  }
+
+  Future<Item> getItem(String id) async {
+    DocumentSnapshot documentSnapshot = await getDocument(id).get();
+    Map<String, dynamic> data = setIdFromDocumentSnapshot(
+      documentSnapshot.data(),
+      documentSnapshot,
+    );
+    return _mapDataToItem(data);
   }
 
   // Can be used to add an item that has an id != null if
@@ -56,11 +65,11 @@ class FirestoreRepository<Item extends Model> extends Repository<Item> {
   // e.g. addItem would generate a random id for that item
   // ignoring the already set id
   Future<void> setItem(Item item) async {
-    return getItem(item).set(item.toMap());
+    return getDocumentByItem(item).set(item.toMap());
   }
 
   Future<void> updateItem(Item item) {
-    return getItem(item).update(item.toMap());
+    return getDocumentByItem(item).update(item.toMap());
   }
 
   Future<void> deleteItem(Item item) {

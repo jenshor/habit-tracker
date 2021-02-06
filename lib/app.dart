@@ -9,6 +9,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           appBarTheme: AppBarTheme(
+            centerTitle: false,
             elevation: 0,
             color: Colors.transparent,
             iconTheme: IconThemeData(color: Colors.black),

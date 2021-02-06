@@ -11,12 +11,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  AuthenticationRepository authRepo = AuthenticationRepository();
+  UserRepository userRepository = UserRepository();
+  AuthenticationRepository authRepo = AuthenticationRepository(
+    userRepository: userRepository,
+  );
 
   var providers = MultiRepositoryProvider(
     providers: [
       RepositoryProvider(create: (context) => authRepo),
-      RepositoryProvider(create: (context) => UserRepository())
+      RepositoryProvider(create: (context) => userRepository)
     ],
     child: MultiBlocProvider(
       providers: [

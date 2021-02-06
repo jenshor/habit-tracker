@@ -6,29 +6,19 @@ import 'package:habit_tracker/blocs/habit_bloc/habit_bloc.dart';
 import 'package:habit_tracker/models/user.dart';
 import 'package:habit_tracker/pages/modify_habit_page.dart';
 import 'package:habit_tracker/repositories/habit_repository.dart';
-import 'package:habit_tracker/widgets/custom_scaffold.dart';
 import 'package:habit_tracker/widgets/habits_list.dart';
 import 'package:habit_tracker/widgets/login_signup.dart';
 import 'package:habit_tracker/widgets/rounded_button.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
 
-class StartPage extends StatefulWidget {
-  StartPage({Key key}) : super(key: key);
-
-  @override
-  _StartPageState createState() => _StartPageState();
-}
-
-class _StartPageState extends State<StartPage> {
+class HabitDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
-      return CustomScaffold(
-        child: state.status == AuthenticationStatus.authenticated
-            ? _app(state.user)
-            : LoginSignup(),
-      );
+      return state.status == AuthenticationStatus.authenticated
+          ? _app(state.user, context)
+          : LoginSignup();
     });
   }
 
@@ -50,7 +40,7 @@ class _StartPageState extends State<StartPage> {
         });
   }
 
-  Widget _app(User user) {
+  Widget _app(User user, context) {
     return RepositoryProvider(
       create: (context) => HabitRepository(user.id.value),
       child: BlocProvider(

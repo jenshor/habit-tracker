@@ -6,8 +6,9 @@ extension FirebaseUserParsing on fb.User {
   User toUserModel() {
     fb.User user = this;
     return User(
-      id: Id(
-        user.uid,
+      id: Id.fromDate(
+        date: DateTime.now(),
+        value: user.uid,
       ),
       email: user.email,
     );
