@@ -23,7 +23,12 @@ class UserDashboard extends StatelessWidget {
             ButtonBar(
               alignment: MainAxisAlignment.center,
               children: [
-                TextButton(onPressed: () {}, child: Text('Log out')),
+                TextButton(
+                    onPressed: () {
+                      BlocProvider.of<AuthenticationBloc>(context)
+                          .add(AuthenticationLogoutRequested());
+                    },
+                    child: Text('Log out')),
                 TextButton(onPressed: () {}, child: Text('Delete account')),
               ],
             )
