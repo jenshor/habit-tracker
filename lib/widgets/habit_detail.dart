@@ -32,10 +32,6 @@ class HabitDetail extends StatelessWidget {
             ),
             RoundedButton(
                 text: 'edit',
-                icon: Icon(
-                  FontAwesomeIcons.solidEdit,
-                  size: 16,
-                ),
                 onPressed: () {
                   Navigator.push(
                       context,

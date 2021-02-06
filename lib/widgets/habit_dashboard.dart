@@ -25,10 +25,6 @@ class HabitDashboard extends StatelessWidget {
   Widget _addHabitButton(BuildContext context) {
     return RoundedButton(
         text: 'add',
-        icon: Icon(
-          FontAwesomeIcons.plus,
-          size: 16,
-        ),
         onPressed: () {
           Navigator.push(
               context,

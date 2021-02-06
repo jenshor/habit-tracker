@@ -15,8 +15,6 @@ import 'package:meta/meta.dart';
 part 'habit_event.dart';
 part 'habit_state.dart';
 
-// TODO this class contains code that is similar to code in HabitTemplateBloc
-// is it possible to refactor this into one base class?
 class HabitBloc extends Bloc<HabitEvent, HabitState> {
   HabitRepository repository;
   DateTimeProvider dateTimeProvider;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:habit_tracker/constants/colors.dart';
+import 'package:habit_tracker/constants/constant_colors.dart';
 import 'package:habit_tracker/widgets/custom_card.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
 
