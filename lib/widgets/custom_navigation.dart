@@ -27,11 +27,19 @@ class _CustomNavigationState extends State<CustomNavigation> {
   @override
   void initState() {
     widgets = HashMap.from({
-      0: Overview(),
+      0: Overview(
+        onHabitClick: () => onNavigationItemChange(1),
+      ),
       1: HabitDashboard(),
       2: UserDashboard(),
     });
     super.initState();
+  }
+
+  void onNavigationItemChange(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
   }
 
   @override
@@ -44,9 +52,7 @@ class _CustomNavigationState extends State<CustomNavigation> {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: selectedIndex,
             onTap: (int index) {
-              setState(() {
-                selectedIndex = index;
-              });
+              onNavigationItemChange(index);
             },
             items: [
               BottomNavigationBarItem(
