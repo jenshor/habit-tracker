@@ -11,29 +11,32 @@ class UserDashboard extends StatelessWidget {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
         User user = state.user;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Account',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            SpacerBox.size16(),
-            UserCard(user: user),
-            ButtonBar(
-              alignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                    onPressed: () {
-                      BlocProvider.of<AuthenticationBloc>(context)
-                          .add(AuthenticationLogoutRequested());
-                    },
-                    child: Text('Log out')),
-                TextButton(onPressed: () {}, child: Text('Delete account')),
-              ],
-            )
-          ],
-        );
+        return user != null
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Account',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  SpacerBox.size16(),
+                  UserCard(user: user),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            BlocProvider.of<AuthenticationBloc>(context)
+                                .add(AuthenticationLogoutRequested());
+                          },
+                          child: Text('Log out')),
+                      TextButton(
+                          onPressed: () {}, child: Text('Delete account')),
+                    ],
+                  )
+                ],
+              )
+            : Container();
       },
     );
   }
@@ -64,7 +67,7 @@ class UserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.fullName,
+                  user.name ?? '',
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 Text(user.email),

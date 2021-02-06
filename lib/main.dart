@@ -16,6 +16,8 @@ void main() async {
     userRepository: userRepository,
   );
 
+  await authRepo.logOut();
+
   var providers = MultiRepositoryProvider(
     providers: [
       RepositoryProvider(create: (context) => authRepo),

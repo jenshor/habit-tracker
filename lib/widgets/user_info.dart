@@ -14,7 +14,7 @@ class UserInfo extends StatelessWidget {
             ? Row(
                 children: [
                   Text(
-                    user.firstName,
+                    user.name,
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SpacerBox.size8(),

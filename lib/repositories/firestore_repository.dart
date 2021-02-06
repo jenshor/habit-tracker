@@ -53,8 +53,9 @@ class FirestoreRepository<Item extends Model> extends Repository<Item> {
 
   Future<Item> getItem(String id) async {
     DocumentSnapshot documentSnapshot = await getDocument(id).get();
-    Map<String, dynamic> data = setIdFromDocumentSnapshot(
-      documentSnapshot.data(),
+    Map<String, dynamic> data = documentSnapshot.data();
+    data = setIdFromDocumentSnapshot(
+      data,
       documentSnapshot,
     );
     return _mapDataToItem(data);
