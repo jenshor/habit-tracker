@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:habit_tracker/models/user.dart';
+import 'package:habit_tracker/pages/edit_user_page.dart';
+import 'package:habit_tracker/repositories/authentication_repository.dart';
 import 'package:habit_tracker/widgets/custom_card.dart';
+import 'package:habit_tracker/widgets/rounded_button.dart';
 import 'package:habit_tracker/widgets/spacer_box.dart';
 
 class UserDashboard extends StatelessWidget {
@@ -15,9 +18,30 @@ class UserDashboard extends StatelessWidget {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Account',
-                    style: Theme.of(context).textTheme.headline4,
+                  Row(
+                    children: [
+                      Text(
+                        'Account',
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      RoundedButton(
+                        text: 'edit',
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (ctx) => RepositoryProvider.value(
+                                  value: RepositoryProvider.of<
+                                      AuthenticationRepository>(context),
+                                  child: EditUserPage(),
+                                ),
+                              ));
+                        },
+                      )
+                    ],
                   ),
                   SpacerBox.size16(),
                   UserCard(user: user),

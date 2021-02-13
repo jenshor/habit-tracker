@@ -109,4 +109,8 @@ class AuthenticationRepository {
       _googleSignIn.signOut(),
     ]);
   }
+
+  Future<void> updateName(String name) async {
+    await _firebaseAuth.currentUser.updateProfile(displayName: name);
+  }
 }

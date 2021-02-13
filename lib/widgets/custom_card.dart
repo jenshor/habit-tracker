@@ -12,11 +12,14 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24), color: Colors.white),
-        child: Padding(
-          padding: EdgeInsets.all(padding),
-          child: child,
-        ));
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(padding),
+        child: child,
+      ),
+    );
   }
 }
