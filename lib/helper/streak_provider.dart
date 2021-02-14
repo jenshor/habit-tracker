@@ -10,7 +10,7 @@ class StreakProvider {
       : this.dateTimeProvider = dateTimeProvider ?? DateTimeProvider();
 
   int getStreak(Habit habit) {
-    List<DateTime> completionDates = habit.completionTimes;
+    List<DateTime> completionDates = habit.completionDates;
     completionDates.sort();
     completionDates = completionDates.reversed.toList();
     Queue<DateTime> dates = Queue<DateTime>.from(completionDates);

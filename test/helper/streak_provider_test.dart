@@ -14,12 +14,12 @@ main() {
     DateTimeProvider dateTimeProvider = DateTimeProviderMock();
     when(dateTimeProvider.getCurrentDay()).thenReturn(defaultDay);
     test('returns 0 if habit has no completions', () {
-      Habit habit = new Habit(id: defaultId, completionTimes: []);
+      Habit habit = new Habit(id: defaultId, completionDates: []);
       StreakProvider().getStreak(habit);
     });
 
     test('returns 1 if habit has been completed today', () {
-      Habit habit = new Habit(id: defaultId, completionTimes: []);
+      Habit habit = new Habit(id: defaultId, completionDates: []);
       StreakProvider(dateTimeProvider: dateTimeProvider).getStreak(habit);
     });
 
@@ -32,7 +32,7 @@ main() {
       );
 
       Habit habit =
-          new Habit(id: defaultId, completionTimes: [defaultDay, ...dateTimes]);
+          new Habit(id: defaultId, completionDates: [defaultDay, ...dateTimes]);
       StreakProvider(dateTimeProvider: dateTimeProvider).getStreak(habit);
     });
 
@@ -44,7 +44,7 @@ main() {
         (index) => defaultDay.subtract(Duration(days: index)),
       );
 
-      Habit habit = new Habit(id: defaultId, completionTimes: [...dateTimes]);
+      Habit habit = new Habit(id: defaultId, completionDates: [...dateTimes]);
       StreakProvider(dateTimeProvider: dateTimeProvider).getStreak(habit);
     });
 
@@ -57,7 +57,7 @@ main() {
       );
 
       Habit habit =
-          new Habit(id: defaultId, completionTimes: [defaultDay, ...dateTimes]);
+          new Habit(id: defaultId, completionDates: [defaultDay, ...dateTimes]);
       StreakProvider(dateTimeProvider: dateTimeProvider).getStreak(habit);
     });
   });

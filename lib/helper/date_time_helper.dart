@@ -9,7 +9,7 @@ class DateTimeHelper {
 
   bool isCompletedToday(Habit habit) {
     DateTime today = dateTimeProvider.getCurrentDay();
-    DateTime time = habit.completionTimes.firstWhere(
+    DateTime time = habit.completionDates.firstWhere(
       (DateTime date) => date.isAtSameMomentAs(today),
       orElse: () => null,
     );
@@ -19,7 +19,7 @@ class DateTimeHelper {
 
   bool isCompletedOnDay(Habit habit, DateTime date) {
     DateTime day = dateTimeProvider.getDayWithoutTime(date);
-    DateTime time = habit.completionTimes.firstWhere(
+    DateTime time = habit.completionDates.firstWhere(
       (DateTime date) => date.isAtSameMomentAs(day),
       orElse: () => null,
     );

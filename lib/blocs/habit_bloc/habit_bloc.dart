@@ -109,12 +109,11 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     );
   }
 
-  // TODO make a global function from this
   Habit toggleHabitCompletion(
     Habit habit,
     DateTime date,
   ) {
-    List<DateTime> completionTimes = List<DateTime>.from(habit.completionTimes);
+    List<DateTime> completionTimes = List<DateTime>.from(habit.completionDates);
     date = date != null
         ? dateTimeProvider.getDayWithoutTime(date)
         : dateTimeProvider.getCurrentDay();
