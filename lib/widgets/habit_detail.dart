@@ -58,7 +58,7 @@ class HabitDetail extends StatelessWidget {
 
   Widget _deleteButton(BuildContext context, Habit habit) {
     return Center(
-      child: FlatButton(
+      child: TextButton(
           onPressed: () {
             Navigator.pop(context);
             BlocProvider.of<HabitBloc>(context).add(HabitDeleted(habit));

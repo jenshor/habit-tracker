@@ -67,7 +67,7 @@ class AcceptButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ModifyHabitCubit, ModifyHabitState>(
       builder: (context, state) {
-        return RaisedButton(
+        return ElevatedButton(
           onPressed:
               state.status == FormzStatus.valid ? () => onPressed(state) : null,
           child: Text(getCallToActionText()),

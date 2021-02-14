@@ -40,7 +40,7 @@ class HabitCompletionToggled extends HabitEvent {
 
   HabitCompletionToggled({
     @required this.habit,
-    @required this.date,
+    this.date,
   });
 
   @override

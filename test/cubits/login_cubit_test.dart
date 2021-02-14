@@ -111,7 +111,6 @@ void testLogInWithCredentialsWhenRepositoryThrowsException() {
     password: defaultPassword.value,
   )).thenThrow(Exception());
 
-  // TODO refactor redundant state later
   var startLoginState = LoginState(
     email: defaultEmail,
     password: defaultPassword,

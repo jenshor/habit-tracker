@@ -12,8 +12,7 @@ class Habit extends Model {
   final String name;
   final Unit unit;
   final Volume volume;
-  // TODO rename this to completionDates
-  final List<DateTime> completionTimes;
+  final List<DateTime> completionDates;
   final int streak;
 
   Habit({
@@ -22,8 +21,8 @@ class Habit extends Model {
     this.unit,
     this.volume,
     this.streak = 0,
-    List<DateTime> completionTimes,
-  })  : this.completionTimes = completionTimes ?? <DateTime>[],
+    List<DateTime> completionDates,
+  })  : this.completionDates = completionDates ?? <DateTime>[],
         super(id: id);
 
   Habit.fromDate({
@@ -52,7 +51,7 @@ class Habit extends Model {
       unit: unit ?? this.unit,
       volume: volume ?? this.volume,
       streak: streak ?? this.streak,
-      completionTimes: completionTimes ?? this.completionTimes,
+      completionDates: completionTimes ?? this.completionDates,
     );
   }
 
@@ -62,7 +61,7 @@ class Habit extends Model {
         this.name,
         this.volume,
         this.unit,
-        ...this.completionTimes,
+        ...this.completionDates,
       ];
 
   Map<String, dynamic> toMap() {
@@ -71,8 +70,8 @@ class Habit extends Model {
       'name': name,
       'unit': unit?.toMap(),
       'volume': volume?.toMap(),
-      'completionTimes':
-          completionTimes?.map((x) => x?.millisecondsSinceEpoch)?.toList(),
+      'completionDates':
+          completionDates?.map((x) => x?.millisecondsSinceEpoch)?.toList(),
     };
   }
 
@@ -84,7 +83,7 @@ class Habit extends Model {
       name: map['name'],
       unit: Unit.fromMap(map['unit']),
       volume: Volume.fromMap(map['volume']),
-      completionTimes: List<DateTime>.from(map['completionTimes']
+      completionDates: List<DateTime>.from(map['completionDates']
               ?.map((x) => DateTime.fromMillisecondsSinceEpoch(x)) ??
           <DateTime>[]),
     );
