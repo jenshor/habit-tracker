@@ -223,7 +223,6 @@ void testCompletionToggled() {
       ..add(
         HabitCompletionToggled(
           habit: habit,
-          date: dateTimeProvider.getCurrentDay(),
         ),
       ),
     expect: [
