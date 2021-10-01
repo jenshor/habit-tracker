@@ -12,6 +12,7 @@ Volume createTimeBasedVolume(
       amount: amount,
       unit: Unit(
         name: 'minute',
+        pluralName: 'minutes',
         symbol: 'm',
       ));
 }

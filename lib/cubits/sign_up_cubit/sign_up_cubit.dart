@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:habit_tracker/forms/inputs/confirmed_password.dart';
 import 'package:habit_tracker/forms/inputs/email.dart';
+import 'package:habit_tracker/forms/inputs/non_empty_text.dart';
 import 'package:habit_tracker/forms/inputs/password.dart';
+import 'package:habit_tracker/models/user.dart' as model;
 import 'package:habit_tracker/repositories/authentication_repository.dart';
 import 'package:habit_tracker/repositories/user_repository.dart';
 import 'package:habit_tracker/extensions/firebase_user.dart';
@@ -21,6 +23,19 @@ class SignUpCubit extends Cubit<SignUpState> {
   final UserRepository _userRepository;
   final AuthenticationRepository _authenticationRepository;
 
+  void nameChanged(String value) {
+    final name = NonEmptyText.dirty(value);
+    emit(state.copyWith(
+      firstName: name,
+      status: Formz.validate([
+        state.email,
+        state.password,
+        state.confirmedPassword,
+        name,
+      ]),
+    ));
+  }
+
   void emailChanged(String value) {
     final email = Email.dirty(value);
     emit(state.copyWith(
@@ -29,6 +44,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         email,
         state.password,
         state.confirmedPassword,
+        state.name,
       ]),
     ));
   }
@@ -46,6 +62,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         state.email,
         password,
         state.confirmedPassword,
+        state.name,
       ]),
     ));
   }
@@ -61,6 +78,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         state.email,
         state.password,
         confirmedPassword,
+        state.name,
       ]),
     ));
   }
@@ -78,15 +96,12 @@ class SignUpCubit extends Cubit<SignUpState> {
   }
 
   Future createUserAfterSignUpAndSignIn() async {
-    UserCredential userCred = await signUpAndSignInWithEmailAndPassword();
-    User user = userCred.user;
-
-    this._userRepository.setItem(user.toUserModel());
-  }
-
-  Future<UserCredential> signUpAndSignInWithEmailAndPassword() async {
-    await signUp();
-    return signIn();
+    UserCredential userCred = await signUp();
+    User firebaseUser = userCred.user;
+    model.User user = firebaseUser.toUserModel().copyWith(
+          firstName: state.name.value,
+        );
+    await this._userRepository.setItem(user);
   }
 
   Future<UserCredential> signIn() async {
@@ -96,10 +111,11 @@ class SignUpCubit extends Cubit<SignUpState> {
     );
   }
 
-  Future signUp() async {
-    await _authenticationRepository.signUp(
+  Future<UserCredential> signUp() async {
+    return await _authenticationRepository.signUp(
       email: state.email.value,
       password: state.password.value,
+      name: state.name.value,
     );
   }
 }

@@ -17,6 +17,9 @@ class LoginForm extends StatelessWidget {
               const SnackBar(content: Text('Authentication Failure')),
             );
         }
+        if (state.status.isSubmissionSuccess) {
+          Navigator.pop(context);
+        }
       },
       child: Align(
         alignment: const Alignment(0, -1 / 3),

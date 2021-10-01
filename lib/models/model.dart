@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class Model extends Equatable {
   final Id id;
+
   Model({
     @required this.id,
   });

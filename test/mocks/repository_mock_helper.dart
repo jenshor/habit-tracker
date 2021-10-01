@@ -51,7 +51,7 @@ class RepositoryMockHelper<Item extends Model> {
     List<Item> itemsReturnedByStream,
   }) {
     if (itemsReturnedByStream == null) {
-      itemsReturnedByStream = List<Item>.empty();
+      itemsReturnedByStream = [updatedItem];
     }
 
     when(

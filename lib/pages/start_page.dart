@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/login_page.dart';
-import 'package:habit_tracker/pages/sign_up_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:habit_tracker/widgets/custom_navigation.dart';
 
 class StartPage extends StatefulWidget {
-  StartPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  StartPage({Key key}) : super(key: key);
 
   @override
   _StartPageState createState() => _StartPageState();
@@ -14,47 +13,9 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              ButtonBar(
-                children: [
-                  ButtonBar(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          navigateToLoginPage(context);
-                        },
-                        child: Text('Log in'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          navigateToSignUpPage(context);
-                        },
-                        child: Text('Sign up'),
-                      )
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        ));
-  }
-
-  void navigateToSignUpPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => SignUpPage(),
-    ));
-  }
-
-  void navigateToLoginPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LoginPage(),
-    ));
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+      return CustomNavigation();
+    });
   }
 }

@@ -15,22 +15,47 @@ class SignUpForm extends StatelessWidget {
               const SnackBar(content: Text('Sign Up Failure')),
             );
         }
+
+        if (state.status.isSubmissionSuccess) {
+          Navigator.pop(context);
+        }
       },
-      child: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _EmailInput(),
-            const SizedBox(height: 8.0),
-            _PasswordInput(),
-            const SizedBox(height: 8.0),
-            _ConfirmPasswordInput(),
-            const SizedBox(height: 8.0),
-            _SignUpButton(),
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _NameInput(),
+          const SizedBox(height: 8.0),
+          _EmailInput(),
+          const SizedBox(height: 8.0),
+          _PasswordInput(),
+          const SizedBox(height: 8.0),
+          _ConfirmPasswordInput(),
+          const SizedBox(height: 8.0),
+          _SignUpButton(),
+        ],
       ),
+    );
+  }
+}
+
+class _NameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.name != current.name,
+      builder: (context, state) {
+        return TextField(
+          key: const Key('signUpForm_firstNameInput_textField'),
+          onChanged: (firstName) =>
+              context.read<SignUpCubit>().nameChanged(firstName),
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            labelText: 'name',
+            helperText: '',
+            errorText: state.name.invalid ? 'cannot be empty' : null,
+          ),
+        );
+      },
     );
   }
 }

@@ -16,19 +16,8 @@ class Volume extends Model {
     this.unit,
   }) : super(id: id);
 
-  // TODO check for better implementation
-  String getAmountDependingName() {
-    String returnValue = unit.name;
-
-    if (amount != 1) {
-      returnValue += 's';
-    }
-
-    return returnValue;
-  }
-
   String toExtendedText() {
-    return '$amount ${getAmountDependingName()}';
+    return '$amount ${unit.toText(amount)}';
   }
 
   String toSymbolText() {

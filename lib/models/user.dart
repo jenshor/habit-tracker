@@ -21,6 +21,7 @@ class User extends Model {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id?.toMap(),
       'name': name,
       'email': email,
     };
@@ -39,4 +40,17 @@ class User extends Model {
   String toJson() => json.encode(toMap());
 
   factory User.fromJson(String source) => User.fromMap(json.decode(source));
+
+  User copyWith({
+    Id id,
+    String firstName,
+    String lastName,
+    String email,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: firstName ?? this.name,
+      email: email ?? this.email,
+    );
+  }
 }

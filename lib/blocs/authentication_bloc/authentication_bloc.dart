@@ -20,7 +20,7 @@ class AuthenticationBloc
   }
 
   StreamSubscription<User> setupSubscription() {
-    return _authenticationRepository.getUsers().listen(
+    return _authenticationRepository.getUserStream().listen(
           (user) => add(AuthenticationUserChanged(user)),
         );
   }

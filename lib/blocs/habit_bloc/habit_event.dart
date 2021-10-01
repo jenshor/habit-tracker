@@ -7,10 +7,40 @@ abstract class HabitEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class HabitAdded extends HabitEvent {
+  final Habit habit;
+
+  HabitAdded(this.habit);
+
+  @override
+  List<Object> get props => [habit];
+}
+
+class HabitDeleted extends HabitEvent {
+  final Habit habit;
+
+  HabitDeleted(this.habit);
+
+  @override
+  List<Object> get props => [habit];
+}
+
+class HabitChanged extends HabitEvent {
+  final Habit habit;
+
+  HabitChanged(this.habit);
+
+  @override
+  List<Object> get props => [habit];
+}
+
 class HabitCompletionToggled extends HabitEvent {
   final Habit habit;
+  final DateTime date;
+
   HabitCompletionToggled({
-    this.habit,
+    @required this.habit,
+    this.date,
   });
 
   @override

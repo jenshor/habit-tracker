@@ -1,46 +1,58 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habit_tracker/exceptions/exceptions.dart';
-import 'package:habit_tracker/models/id.dart';
+import 'package:habit_tracker/repositories/user_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:habit_tracker/models/user.dart' as model;
+import 'package:habit_tracker/extensions/firebase_user.dart';
 
 class AuthenticationRepository {
   AuthenticationRepository({
+    @required UserRepository userRepository,
     FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+  })  : assert(userRepository != null),
+        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  Stream<model.User> getUsers() {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      return firebaseUser != null ? firebaseUser.toUser : null;
+  Stream<model.User> getUserStream() {
+    return _firebaseAuth.userChanges().asyncMap((firebaseUser) async {
+      if (firebaseUser != null) {
+        model.User user = firebaseUser.toUserModel();
+        return user;
+      } else {
+        return null;
+      }
     });
   }
 
-  Future<void> signUp({
+  Future<UserCredential> signUp({
     @required String email,
     @required String password,
+    @required String name,
   }) async {
     assert(email != null && password != null);
     try {
-      await createUserWithEmailAndPassword(email, password);
+      return await createUserWithEmailAndPassword(email, password, name);
     } on Exception {
       throw SignUpFailure();
     }
   }
 
   Future<UserCredential> createUserWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+      String email, String password, String name) async {
+    UserCredential credential =
+        await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    await credential.user.updateProfile(displayName: name);
+    return credential;
   }
 
   Future<void> logInWithGoogle() async {
@@ -97,16 +109,8 @@ class AuthenticationRepository {
       _googleSignIn.signOut(),
     ]);
   }
-}
 
-extension on User {
-  model.User get toUser {
-    return model.User(
-      id: Id(uid),
-      email: email,
-      name: displayName,
-      // TODO think about implementing this later
-      // photo: photoURL,
-    );
+  Future<void> updateName(String name) async {
+    await _firebaseAuth.currentUser.updateProfile(displayName: name);
   }
 }

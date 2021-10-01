@@ -1,17 +1,18 @@
 import 'dart:convert';
-
 import 'package:habit_tracker/models/id.dart';
-
 import 'model.dart';
+import 'package:meta/meta.dart';
 
 class Unit extends Model {
   final String symbol;
   final String name;
+  final String pluralName;
 
   Unit({
     Id id,
-    this.symbol,
-    this.name,
+    @required this.symbol,
+    @required this.name,
+    @required this.pluralName,
   }) : super(id: id);
 
   Map<String, dynamic> toMap() {
@@ -19,6 +20,7 @@ class Unit extends Model {
       'id': id,
       'symbol': symbol,
       'name': name,
+      'pluralName': pluralName,
     };
   }
 
@@ -29,7 +31,12 @@ class Unit extends Model {
       id: map['id'],
       symbol: map['symbol'],
       name: map['name'],
+      pluralName: map['pluralName'],
     );
+  }
+
+  String toText(int amount) {
+    return amount == 1 ? this.name : this.pluralName;
   }
 
   String toJson() => json.encode(toMap());
@@ -41,5 +48,6 @@ class Unit extends Model {
         this.id,
         this.symbol,
         this.name,
+        this.pluralName,
       ];
 }
